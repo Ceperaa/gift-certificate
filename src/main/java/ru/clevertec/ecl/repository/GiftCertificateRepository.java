@@ -73,8 +73,6 @@ public class GiftCertificateRepository extends AbstractRepositoryCrud<GiftCertif
                                 "description", String.format("%%%s%%", description)),
                         MAPPER);
     }
-
-
-        }
+}
 
 

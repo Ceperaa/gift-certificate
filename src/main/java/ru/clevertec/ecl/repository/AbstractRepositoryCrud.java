@@ -8,9 +8,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.util.Page;
-import ru.clevertec.ecl.util.Sorting;
 
 import java.io.Serializable;
 import java.util.*;
@@ -33,9 +31,9 @@ public abstract class AbstractRepositoryCrud<T> implements RepositoryCrud<T> {
         Map<String, Serializable> limit = Map
                 .of("limit", Optional.ofNullable(page.getLimit()).orElseGet(() -> DEFAULT_PAGE_SIZE),
                         "offset", Optional.ofNullable(page.getOffset()).orElseGet(() -> 0));
-        List<T> query = namedParameterJdbcTemplate
+
+        return namedParameterJdbcTemplate
                 .query(selectAll, limit, mapper);
-        return (List<T>) sort(query, page.getSorting());
     }
 
     @Override
@@ -82,17 +80,4 @@ public abstract class AbstractRepositoryCrud<T> implements RepositoryCrud<T> {
     }
 
     abstract protected void setId(T model, long id);
-
-    protected List<GiftCertificate> sort(List<T> list1, Sorting sorting) {
-        List<GiftCertificate> list = (List<GiftCertificate>) list1;
-        switch (sorting) {
-            case NAME:
-                return list.stream().sorted(Comparator.comparing(GiftCertificate::getName)).collect(Collectors.toList());
-            case CREATE_DATE:
-                return list.stream().sorted(Comparator.comparing(GiftCertificate::getCreateDate)).collect(Collectors.toList());
-            case NAME_AND_CREATE_DATE:
-            default:
-                return list.stream().sorted(Comparator.comparing(GiftCertificate::getName)).sorted(Comparator.comparing(GiftCertificate::getCreateDate)).collect(Collectors.toList());
-        }
-    }
 }
