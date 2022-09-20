@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <includeAll path="db-changelog-1.xml"/>
+
+    <changeSet author="Sergey" id="1">
+        <sql>
+            CREATE TABLE IF NOT EXISTS public.gift_certificate
+            (
+            id BIGSERIAL PRIMARY KEY,
+            name varchar(50) NOT NULL,
+            description varchar(50) NOT NULL,
+            price varchar(10) NOT NULL,
+            duration smallint NOT NULL,
+            create_date date NOT NULL,
+            last_update_date date NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS public.tag
+            (
+            id BIGSERIAL PRIMARY KEY,
+            name varchar(50) NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS public.gift_certificate_tag
+            (
+            gift_certificate_id bigint,
+            tag_id bigint,
+            CONSTRAINT gift_certificate FOREIGN KEY (gift_certificate_id)
+            REFERENCES public.gift_certificate (id)
+            ON UPDATE cascade
+            ON DELETE cascade,
+            CONSTRAINT tag FOREIGN KEY (tag_id)
+            REFERENCES public.tag (id)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+            );
+        </sql>
+    </changeSet>
+    <changeSet author="Sergey" id="2">
+        <sql>
+            INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date) VALUES ('APhone','desc',10.00, 13, '2022-12-11', '2022-10-24');
+            INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date) VALUES ('BPhone','desc',10.00, 13, '2022-12-11', '2022-10-24');
+            INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date) VALUES ('CPhone','desc',10.00, 13, '2022-12-11', '2022-10-24');
+            INSERT INTO gift_certificate (name, description, price, duration, create_date, last_update_date) VALUES ('DPhone','desc',10.00, 13, '2022-12-11', '2022-10-24');
+
+        </sql>
+    </changeSet>
+    <changeSet author="Sergey" id="3">
+        <sql>
+            INSERT INTO public.tag (name) VALUES ('name');
+            INSERT INTO public.tag (name) VALUES ('description');
+            INSERT INTO public.tag (name) VALUES ('price');
+            INSERT INTO public.tag (name) VALUES ('create');
+            INSERT INTO public.tag (name) VALUES ('date');
+            INSERT INTO public.tag (name) VALUES ('last');
+            INSERT INTO public.tag (name) VALUES ('update');
+            INSERT INTO public.tag (name) VALUES ('date');
+        </sql>
+    </changeSet>
+
+    <changeSet author="Sergey" id="4">
+        <sql>
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (1,8);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (2,7);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (3,6);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (4,5);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (1,4);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (2,3);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (3,2);
+            INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id) VALUES (4,1);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
