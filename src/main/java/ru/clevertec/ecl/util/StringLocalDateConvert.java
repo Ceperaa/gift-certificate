@@ -11,6 +11,6 @@ public class StringLocalDateConvert extends StdConverter<String, LocalDateTime> 
         if (s == null || s.trim().isEmpty()) {
             return null;
         }
-        return LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS"));
+        return LocalDateTime.parse(s, DateTimeFormatter.ofPattern(LocalDateStringConvert.DATA_FORMAT));
     }
 }

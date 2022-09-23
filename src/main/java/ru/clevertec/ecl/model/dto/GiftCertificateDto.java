@@ -23,9 +23,11 @@ public class GiftCertificateDto {
     private String description;
     private BigDecimal price;
     private Integer duration;
+
     @JsonSerialize(converter = LocalDateStringConvert.class)
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime createDate;
+
     @JsonSerialize(converter = LocalDateStringConvert.class)
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime lastUpdateDate;

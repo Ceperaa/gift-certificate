@@ -1,14 +1,17 @@
 package ru.clevertec.ecl.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.exception.ObjectNotFoundException;
 import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
+import ru.clevertec.ecl.model.dto.TagForCreateDto;
 import ru.clevertec.ecl.model.entity.Tag;
-import ru.clevertec.ecl.repository.RepositoryCrud;
-import ru.clevertec.ecl.util.Page;
+import ru.clevertec.ecl.repository.TagRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -17,34 +20,41 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private final RepositoryCrud<Tag> tagRepository;
+    private final TagRepository tagRepository;
     private final TagMapper mapper;
 
-    public TagDto findById(Long id) {
-        return mapper
-                .toDto(tagRepository.findById(id)
-                        .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id))
-                );
+    public TagDto findTagDtoById(Long id) {
+        return mapper.toDto(findTagById(id));
     }
 
+    private Tag findTagById(Long id) {
+        return tagRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
+    }
+
+    @Transactional
     public void delete(Long id) {
-        tagRepository.deleteById(id);
+        tagRepository.delete(findTagById(id));
     }
 
-    public TagDto update(Map<String, Object> giftCertificateMap, Long id) {
+    @Transactional
+    public TagDto update(Map<String, Object> map, Long id) {
+        map.put("id", id);
+        Tag tag = new ObjectMapper().convertValue(map, Tag.class);
         return mapper
-                .toDto(tagRepository.updateFieldsById(giftCertificateMap, id)
-                        .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id))
-                );
+                .toDto(tagRepository.save(tag));
     }
 
-    public List<TagDto> findAll(Page page) {
+    public List<TagDto> findAll(PageRequest page) {
         return mapper
-                .toDtoList(tagRepository.findAll(page));
+                .toDtoList(tagRepository.findAll(page).toList());
     }
 
-    public TagDto create(TagDto giftCertificate) {
-        return mapper.
-                toDto(tagRepository.create(mapper.toEntity(giftCertificate)));
+    public TagDto saveTagDto(TagForCreateDto tagDto) {
+        return mapper.toDto(saveTag(mapper.toEntity(tagDto)));
+    }
+
+    public Tag saveTag(Tag tag) {
+        return tagRepository.save(tag);
     }
 }

@@ -1,7 +1,10 @@
 package ru.clevertec.ecl.services;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.util.Page;
+import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 
 import java.util.List;
 import java.util.Map;
@@ -12,13 +15,11 @@ public interface GiftCertificateService {
 
      void delete(Long id);
 
-     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id);
+     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id) throws JsonMappingException;
 
-     List<GiftCertificateDto> findAll(Page page);
+     List<GiftCertificateDto> findAll(PageRequest page);
 
-     GiftCertificateDto create(GiftCertificateDto giftCertificate);
+     GiftCertificateDto create(GiftCertificateForCreateDto giftCertificate);
 
-     List<GiftCertificateDto> findByTag(String tagName);
-
-     List<GiftCertificateDto> findByTagName(String name, String description);
+     List<GiftCertificateDto> findByTag(String tagName, Pageable pageRequest);
 }

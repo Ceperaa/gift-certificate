@@ -1,20 +1,24 @@
 package ru.clevertec.ecl.services;
 
+import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.util.Page;
+import ru.clevertec.ecl.model.dto.TagForCreateDto;
+import ru.clevertec.ecl.model.entity.Tag;
 
 import java.util.List;
 import java.util.Map;
 
 public interface TagService {
 
-    TagDto findById(Long id);
+    TagDto findTagDtoById(Long id);
 
     void delete(Long id);
 
     TagDto update(Map<String, Object> giftCertificateMap, Long id);
 
-    List<TagDto> findAll(Page page);
+    List<TagDto> findAll(PageRequest page);
 
-    TagDto create(TagDto giftCertificate);
+    TagDto saveTagDto(TagForCreateDto tagForCreateDto);
+
+    Tag saveTag(Tag tag);
 }

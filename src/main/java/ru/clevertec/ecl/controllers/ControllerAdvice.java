@@ -1,6 +1,7 @@
 package ru.clevertec.ecl.controllers;
 
 
+import com.fasterxml.jackson.core.JsonParseException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,23 +25,25 @@ import java.util.Arrays;
 @RestControllerAdvice
 public class ControllerAdvice {
 
-    @ExceptionHandler(value = {
-            Exception.class
-    })
+//    @ExceptionHandler(value = Exception.class)
+//    @ResponseStatus(HttpStatus.CONFLICT)
+//    public ExceptionObject response409(@RequestBody Exception e) {
+//        return aggregate(e.getMessage(), HttpStatus.CONFLICT, Arrays.toString(e.getStackTrace()));
+//    }
+
+    @ExceptionHandler(value = JsonParseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionObject response400(@RequestBody Exception e) {
-        return aggregate(e.getMessage(), HttpStatus.BAD_REQUEST, Arrays.toString(e.getStackTrace()));
+        return aggregate(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = {ValidationException.class})
+    @ExceptionHandler(value = {ValidationException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ExceptionObject response422(@RequestBody Exception e) {
         return aggregate(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(value = {
-            ObjectNotFoundException.class
-    })
+    @ExceptionHandler(value = ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionObject response404(@RequestBody Exception e) {
         return aggregate(e.getMessage(), HttpStatus.NOT_FOUND);
