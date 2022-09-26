@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
@@ -29,53 +29,54 @@ public class GiftCertificateController {
     private final ValidatorHandler validatorHandler;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto add(
+    public ResponseEntity<GiftCertificateDto> add(
             @RequestBody @Valid GiftCertificateForCreateDto giftCertificateDto,
             BindingResult bindingResult
     ) throws ValidationException {
         validatorHandler.message(bindingResult);
-        return service.create(giftCertificateDto);
+        return new ResponseEntity<>(service.create(giftCertificateDto),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto update(@RequestBody Map<String, Object> map, @PathVariable Long id)
-            throws JsonMappingException {
-        return service.update(map, id);
+    public ResponseEntity<GiftCertificateDto> update(@RequestBody Map<String, Object> map,
+                                                     @PathVariable Long id) {
+        return new ResponseEntity<>(service.update(map, id),
+                HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<GiftCertificateDto> all(
+    public ResponseEntity<List<GiftCertificateDto>> all(
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
-        return service.findAll(PageRequest.of(offset, limit));
+        return new ResponseEntity<>(service.findAll(PageRequest.of(offset, limit)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/tag")
-    public List<GiftCertificateDto> findByTag(
+    public ResponseEntity<List<GiftCertificateDto>> findByTag(
             @RequestParam(defaultValue = "") String tagName,
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset,
             @RequestParam(defaultValue = "NAME") Sorting sorts
     ) {
-        return service.findByTag(tagName,
+        return new ResponseEntity<>(service.findByTag(tagName,
                 PageRequest.of(
                         offset,
                         limit,
                         Sort.by(Sort.Direction.ASC, sorts.getSort())
-                ));
+                )), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public GiftCertificateDto findById(@PathVariable long id) {
-        return service.findById(id);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<GiftCertificateDto> findById(@PathVariable long id) {
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id) {
+    public ResponseEntity<?> delete(@PathVariable long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

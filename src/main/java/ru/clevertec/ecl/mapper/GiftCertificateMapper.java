@@ -16,8 +16,8 @@ public interface GiftCertificateMapper {
 
     @Mapping(source = "localDateTime", target = "createDate")
     @Mapping(source = "localDateTime", target = "lastUpdateDate")
-    @Mapping(source = "tags", target = "tags")
-    GiftCertificate toEntity(GiftCertificateForCreateDto giftCertificateDto, LocalDateTime localDateTime, List<Tag> tags);
+    @Mapping(source = "tag", target = "tag")
+    GiftCertificate toEntity(GiftCertificateForCreateDto giftCertificateDto, LocalDateTime localDateTime, List<Tag> tag);
 
     GiftCertificateDto toDto(GiftCertificate giftCertificate);
 

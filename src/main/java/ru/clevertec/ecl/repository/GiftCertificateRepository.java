@@ -12,7 +12,7 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
 
     @Query(" select gc " +
             " from GiftCertificate gc" +
-            " left outer join gc.tags t " +
+            " left outer join gc.tag t " +
             " where lower(t.name) like lower(concat('%', :name,'%' ))")
     List<GiftCertificate> findByNameWithPagination(@Param("name") String name, Pageable pageable);
 }

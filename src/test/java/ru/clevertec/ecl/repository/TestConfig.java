@@ -1,6 +1,9 @@
-package ru.clevertec.ecl.configuration;
+package ru.clevertec.ecl.repository;
+
 
 import liquibase.integration.spring.SpringLiquibase;
+import org.h2.security.auth.H2AuthConfig;
+import org.h2.tools.Server;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,33 +15,20 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.clevertec.ecl.util.ApplicationProperties;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
-@EnableWebMvc
-@EnableSwagger2
 @EnableJpaRepositories("ru.clevertec.ecl.repository")
-@ComponentScan({"ru.clevertec.ecl"})
-@PropertySource(value = "classpath:application.yaml", factory = ApplicationProperties.class)
-public class AppConfig implements WebMvcConfigurer {
+@PropertySource(value = "classpath:application-test.yaml", factory = ApplicationProperties.class)
+public class TestConfig {
 
     @Value("${datasource.url}")
     private String url;
-    @Value("${datasource.driver}")
+    @Value("${datasource.driver-class-name}")
     private String driver;
     @Value("${datasource.username}")
     private String user;
@@ -62,6 +52,11 @@ public class AppConfig implements WebMvcConfigurer {
         liquibase.setChangeLog(changelog);
         liquibase.setDataSource(dataSource());
         return liquibase;
+    }
+
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public Server h2Server() throws SQLException {
+        return Server.createWebServer();
     }
 
     @Bean
@@ -95,36 +90,5 @@ public class AppConfig implements WebMvcConfigurer {
         em.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         return em;
-    }
-
-    @Bean
-    public Docket productApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build().apiInfo(testApiInfo());
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry
-                .addMapping("/**");
-    }
-
-    private ApiInfo testApiInfo() {
-        return new ApiInfoBuilder()
-                .title("Gift certificate") // Заголовок
-                .description("Develop web service for Gift Certificates system with the following entities (many-to-many) \n")
-                .version("1.0 version")
-                .build();
     }
 }

@@ -1,7 +1,9 @@
 package ru.clevertec.ecl.services;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import ru.clevertec.ecl.repository.TagRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,17 +36,21 @@ public class TagServiceImpl implements TagService {
                 .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
     }
 
+    private Optional<Tag> findTagByName(String name) {
+        return tagRepository.findTagByName(name);
+    }
+
     @Transactional
     public void delete(Long id) {
         tagRepository.delete(findTagById(id));
     }
 
     @Transactional
+    @SneakyThrows(JsonMappingException.class)
     public TagDto update(Map<String, Object> map, Long id) {
         map.put("id", id);
-        Tag tag = new ObjectMapper().convertValue(map, Tag.class);
-        return mapper
-                .toDto(tagRepository.save(tag));
+        Tag tag = new ObjectMapper().updateValue(findTagById(id), map);
+        return mapper.toDto(tagRepository.save(tag));
     }
 
     public List<TagDto> findAll(PageRequest page) {
@@ -56,5 +64,13 @@ public class TagServiceImpl implements TagService {
 
     public Tag saveTag(Tag tag) {
         return tagRepository.save(tag);
+    }
+
+    public List<Tag> mapToTagList(List<String> tagNameList) {
+        return tagNameList
+                .stream()
+                .map((tag) -> findTagByName(tag)
+                        .orElseGet(() -> saveTag(Tag.builder().name(tag).build())))
+                .collect(Collectors.toList());
     }
 }

@@ -22,6 +22,6 @@ public class Tag {
     private String name;
 
     @ToString.Exclude
-    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY)
-    private List<GiftCertificate> giftCertificateList;
+    @ManyToMany(mappedBy = "tag",fetch = FetchType.LAZY)
+    private List<GiftCertificate> giftCertificate;
 }

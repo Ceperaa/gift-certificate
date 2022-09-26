@@ -5,24 +5,24 @@ Configutation:
       name: Console_Appender
       type: Console
       PatternLayout:
-        pattern: "%d{yyyy-MM-dd HH:mm:ss} [%t] %highlight{%-5p} %c{1}:%L - %m%n"
+        pattern: "%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n"
     File:
       name: File_Appender
       type: File
       fileName: debug.log
       PatternLayout:
-        pattern: "%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n"
+        pattern: "%d{yyyy-MM-dd HH:mm:ss} [%t] %highlight{%-5p} %c{1}:%L - %m%n"
     RollingFile:
       - name: RollingFile_Appender
         fileName: rollingfile.log
-        filePattern: "logs.rollingfile.log.%d{yyyy-MM-dd-hh-mm}.gz"
+        filePattern: "logs/rollingfile.log.%d{yyyy-MM-dd}.log"
         PatternLayout:
           pattern: "%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n"
         Policies:
           SizeBasedTriggeringPolicy:
-            size: 1 KB
+            size: 100 KB
         DefaultRollOverStrategy:
-          max: 30
+          max: 10
   Loggers:
     Root:
       level: debug

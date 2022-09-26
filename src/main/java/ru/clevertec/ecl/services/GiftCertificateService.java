@@ -1,6 +1,5 @@
 package ru.clevertec.ecl.services;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
@@ -15,7 +14,7 @@ public interface GiftCertificateService {
 
      void delete(Long id);
 
-     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id) throws JsonMappingException;
+     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id);
 
      List<GiftCertificateDto> findAll(PageRequest page);
 

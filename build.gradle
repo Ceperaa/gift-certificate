@@ -22,6 +22,7 @@ ext.versions = [
         'swagger'   : '2.9.2',
         'lombok'    : '1.18.24',
         'postgresql': '42.4.0',
+        'junit'     : '5.8.2',
 ]
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     implementation "org.springframework:spring-orm:${versions.spring}"
     implementation "org.springframework:spring-web:${versions.spring}"
     implementation "org.springframework:spring-webmvc:${versions.spring}"
+    testImplementation "org.springframework:spring-test:${versions.spring}"
     implementation "org.springframework.data:spring-data-jpa:2.6.1"
 
     implementation "org.hibernate:hibernate-core:${versions.hibernate}"
@@ -48,7 +50,9 @@ dependencies {
     implementation "io.springfox:springfox-swagger2:${versions.swagger}"
     implementation "io.springfox:springfox-swagger-ui:${versions.swagger}"
 
-    testCompileOnly group: 'junit', name: 'junit', version: '4.12'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+//    testImplementation "org.mockito:mockito-all:1.10.19"
+    testImplementation 'org.mockito:mockito-core:4.8.0'
 
     implementation "org.liquibase:liquibase-core:${versions.liquibase}"
 

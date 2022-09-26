@@ -21,4 +21,6 @@ public interface TagService {
     TagDto saveTagDto(TagForCreateDto tagForCreateDto);
 
     Tag saveTag(Tag tag);
+
+    List<Tag> mapToTagList(List<String> tagNameList);
 }

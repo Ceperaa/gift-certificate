@@ -38,9 +38,9 @@ public class GiftCertificate {
     private LocalDateTime lastUpdateDate;
 
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "gift_certificate_tag",
-            joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
-    private List<Tag> tags;
+    @ManyToMany
+//    @JoinTable(name = "gift_certificate_tag",
+//            joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
+    private List<Tag> tag;
 }

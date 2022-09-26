@@ -3,6 +3,7 @@ package ru.clevertec.ecl.services;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,11 @@ import ru.clevertec.ecl.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,30 +43,27 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Transactional
-    public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) throws JsonMappingException {
+    @SneakyThrows(JsonMappingException.class)
+    public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) {
         giftCertificateMap.put("id", id);
-        GiftCertificate byId = findGiftCertificateById(id);
-        GiftCertificate giftCertificate = new ObjectMapper().updateValue(byId, giftCertificateMap);
-        return mapper
-                .toDto(giftCertificateRepository.save(giftCertificate));
+        GiftCertificate giftCertificate = new ObjectMapper().updateValue(findGiftCertificateById(id),
+                giftCertificateMap);
+        return mapper.toDto(giftCertificateRepository.save(giftCertificate));
     }
 
     public List<GiftCertificateDto> findAll(PageRequest page) {
-        return mapper
-                .toDtoList(giftCertificateRepository.findAll((page)).toList());
+        return mapper.
+                toDtoList(giftCertificateRepository.findAll((page)).toList());
     }
 
+    @Transactional
     public GiftCertificateDto create(GiftCertificateForCreateDto giftCertificateDto) {
         return mapper.
                 toDto(giftCertificateRepository
                         .save(mapper.toEntity(
                                 giftCertificateDto,
                                 LocalDateTime.now().minusNanos(0),
-                                giftCertificateDto
-                                        .getTagNames()
-                                        .stream()
-                                        .map(tag -> Tag.builder().name(tag).build())
-                                        .collect(Collectors.toList())))
+                                tagService.mapToTagList(giftCertificateDto.getTagNames())))
                 );
     }
 
