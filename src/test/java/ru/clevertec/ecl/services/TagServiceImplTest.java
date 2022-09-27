@@ -12,6 +12,7 @@ import ru.clevertec.ecl.model.dto.TagForCreateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
+import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
 import java.util.HashMap;
 import java.util.List;

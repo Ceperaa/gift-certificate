@@ -1,72 +1,105 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 }
 
 group 'ru.clevertec.ecl'
 version '1.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 ext.versions = [
-        'spring'    : '5.3.22',
-        'mapStruct' : '1.5.2.Final',
-        'junit'     : '5.8.2',
-        'mockito'   : '4.7.0',
+        'gson'     : '2.9.0',
+        'mapStruct': '1.5.2.Final',
+        'junit'    : '5.8.2',
+        'mockito'  : '4.7.0',
         'yaml'      : '2.13.3',
-        'hibernate' : '5.6.10.Final',
         'log4j'     : '2.18.0',
         'slf4j'     : '1.7.36',
-        'liquibase' : '4.3.5',
-        'swagger'   : '2.9.2',
-        'lombok'    : '1.18.24',
-        'postgresql': '42.4.0',
-        'junit'     : '5.8.2',
 ]
 
 dependencies {
-    implementation "org.springframework:spring-jdbc:${versions.spring}"
-    implementation "org.springframework:spring-context:${versions.spring}"
-    implementation "org.springframework:spring-tx:${versions.spring}"
-    implementation "org.springframework:spring-orm:${versions.spring}"
-    implementation "org.springframework:spring-web:${versions.spring}"
-    implementation "org.springframework:spring-webmvc:${versions.spring}"
-    testImplementation "org.springframework:spring-test:${versions.spring}"
-    implementation "org.springframework.data:spring-data-jpa:2.6.1"
 
-    implementation "org.hibernate:hibernate-core:${versions.hibernate}"
-    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
-    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
-    implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}"
-    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
+    implementation 'org.liquibase:liquibase-core'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
 
-    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.yaml}"
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
-
-    implementation "io.springfox:springfox-swagger2:${versions.swagger}"
-    implementation "io.springfox:springfox-swagger-ui:${versions.swagger}"
-
+    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
-//    testImplementation "org.mockito:mockito-all:1.10.19"
-    testImplementation 'org.mockito:mockito-core:4.8.0'
-
-    implementation "org.liquibase:liquibase-core:${versions.liquibase}"
-
-    compileOnly "org.projectlombok:lombok:${versions.lombok}"
-    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
-    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
-
-    implementation "org.postgresql:postgresql:${versions.postgresql}"
-
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
-
+    implementation "com.google.code.gson:gson:${versions.gson}"
     testImplementation 'com.h2database:h2:2.1.214'
+
+//    implementation "org.springframework:spring-jdbc:${versions.spring}"
+//    implementation "org.springframework:spring-context:${versions.spring}"
+//    implementation "org.springframework:spring-tx:${versions.spring}"
+//    implementation "org.springframework:spring-orm:${versions.spring}"
+//    implementation "org.springframework:spring-web:${versions.spring}"
+//    implementation "org.springframework:spring-webmvc:${versions.spring}"
+//    testImplementation "org.springframework:spring-test:${versions.spring}"
+//    implementation "org.springframework.data:spring-data-jpa:2.6.1"
+//
+//    implementation "org.hibernate:hibernate-core:${versions.hibernate}"
+//    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+//
+//    implementation "org.slf4j:slf4j-api:${versions.slf4j}"
+//    implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}"
+//    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}"
+//
+//    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.3'
+//    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.yaml}"
+//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+//
+//    implementation "io.springfox:springfox-swagger2:${versions.swagger}"
+//    implementation "io.springfox:springfox-swagger-ui:${versions.swagger}"
+//
+//    testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+////    testImplementation "org.mockito:mockito-all:1.10.19"
+//    testImplementation 'org.mockito:mockito-core:4.8.0'
+//
+//    implementation "org.liquibase:liquibase-core:${versions.liquibase}"
+//
+//    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+//    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+//    testAnnotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+//    testCompileOnly "org.projectlombok:lombok:${versions.lombok}"
+//
+//    implementation "org.postgresql:postgresql:${versions.postgresql}"
+//
+//    implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
+//    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
+//
+//    testImplementation 'com.h2database:h2:2.1.214'
+}
+
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
 }
 
 tasks.named('test') {

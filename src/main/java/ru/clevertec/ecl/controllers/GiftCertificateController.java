@@ -1,7 +1,5 @@
 package ru.clevertec.ecl.controllers;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -38,7 +36,7 @@ public class GiftCertificateController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<GiftCertificateDto> update(@RequestBody Map<String, Object> map,
                                                      @PathVariable Long id) {
         return new ResponseEntity<>(service.update(map, id),
@@ -58,10 +56,24 @@ public class GiftCertificateController {
     public ResponseEntity<List<GiftCertificateDto>> findByTag(
             @RequestParam(defaultValue = "") String tagName,
             @RequestParam(defaultValue = "20") Integer limit,
+            @RequestParam(defaultValue = "0") Integer offset
+    ) {
+        return new ResponseEntity<>(service.findByTagNameAngCertificateName(tagName,
+                PageRequest.of(
+                        offset,
+                        limit
+                )), HttpStatus.OK);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<List<GiftCertificateDto>> findByNameAndDescription(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset,
             @RequestParam(defaultValue = "NAME") Sorting sorts
     ) {
-        return new ResponseEntity<>(service.findByTag(tagName,
+        return new ResponseEntity<>(service.findByCertificateName(name, description,
                 PageRequest.of(
                         offset,
                         limit,

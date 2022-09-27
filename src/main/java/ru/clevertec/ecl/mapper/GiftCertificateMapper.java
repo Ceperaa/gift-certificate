@@ -11,7 +11,7 @@ import ru.clevertec.ecl.model.entity.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = TagMapper.class)
 public interface GiftCertificateMapper {
 
     @Mapping(source = "localDateTime", target = "createDate")
@@ -22,4 +22,5 @@ public interface GiftCertificateMapper {
     GiftCertificateDto toDto(GiftCertificate giftCertificate);
 
     List<GiftCertificateDto> toDtoList(List<GiftCertificate> giftCertificateList);
+
 }

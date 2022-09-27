@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@EqualsAndHashCode(of = {"name","description","duration"})
+@EqualsAndHashCode(of = {"name", "description", "duration"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GiftCertificate {
 
@@ -39,8 +39,5 @@ public class GiftCertificate {
 
     @ToString.Exclude
     @ManyToMany
-//    @JoinTable(name = "gift_certificate_tag",
-//            joinColumns = {@JoinColumn(name = "gift_certificate_id", referencedColumnName = "id")},
-//            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
     private List<Tag> tag;
 }

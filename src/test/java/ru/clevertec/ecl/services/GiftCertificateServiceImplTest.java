@@ -1,6 +1,5 @@
 package ru.clevertec.ecl.services;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -14,6 +13,8 @@ import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
+import ru.clevertec.ecl.services.impl.GiftCertificateServiceImpl;
+import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,7 +37,6 @@ class GiftCertificateServiceImplTest {
     private GiftCertificate giftCertificate;
     private GiftCertificateForCreateDto giftCertificateForCreateDto;
     private GiftCertificateDto giftCertificateDto;
-    private LocalDateTime localDateTime;
     @Mock
     private GiftCertificateMapper mapper;
 
@@ -127,7 +127,8 @@ class GiftCertificateServiceImplTest {
     void givenTagName_whenFindGiftCertificateByTag_thenGiftCertificateList() {
         PageRequest pageRequest = PageRequest.of(0, 20);
         String tag = "tag";
+        String certificate = "certificate";
         given(giftCertificateRepository.findByNameWithPagination(tag, pageRequest)).willReturn(List.of(giftCertificate));
-        service.findByTag(tag, pageRequest);
+        service.findByTagNameAngCertificateName(tag, pageRequest);
     }
 }

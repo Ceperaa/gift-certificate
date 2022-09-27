@@ -1,6 +1,5 @@
 package ru.clevertec.ecl.controllers;
 
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,10 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.clevertec.ecl.exception.ObjectNotFoundException;
 
 import javax.xml.bind.ValidationException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Exceptions Handler
@@ -36,7 +32,8 @@ public class ControllerAdvice {
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionObject response400(@RequestBody Exception e) {
-        return aggregate(e.getMessage(), HttpStatus.BAD_REQUEST, e.getClass().getName());
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        return aggregate(e.getMessage(), badRequest, code(e, badRequest));
     }
 
     @ExceptionHandler(value = {
@@ -45,23 +42,34 @@ public class ControllerAdvice {
     })
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ExceptionObject response422(@RequestBody Exception e) {
-        return aggregate(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getClass().getName());
+        HttpStatus unprocessableEntity = HttpStatus.UNPROCESSABLE_ENTITY;
+        return aggregate(e.getMessage(), unprocessableEntity, code(e, unprocessableEntity));
     }
 
     @ExceptionHandler(value = ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionObject response404(@RequestBody Exception e) {
-        return aggregate(e.getMessage(), HttpStatus.NOT_FOUND, e.getClass().getName());
+        HttpStatus notFound = HttpStatus.NOT_FOUND;
+        return aggregate(e.getMessage(), notFound, code(e, notFound));
     }
 
-    private ExceptionObject aggregate(String message, HttpStatus status, String exceptionName) {
+    private ExceptionObject aggregate(String message, HttpStatus status, String code) {
         return ExceptionObject
                 .builder()
-                .code(String.valueOf(status.value()))
+                .code(code)
                 .status(String.valueOf(status))
-                .exceptionName(exceptionName)
                 .message(message)
                 .build();
+    }
+
+    private String code(Exception e, HttpStatus status) {
+        Map<Class<?>, String> map = new HashMap<>();
+        map.put(JsonParseException.class, "01");
+        map.put(JsonMappingException.class, "02");
+        map.put(ValidationException.class, "03");
+        map.put(IllegalArgumentException.class, "04");
+        map.put(ObjectNotFoundException.class, "05");
+        return String.valueOf(status.value()).concat(map.get(e.getClass()));
     }
 }
 
@@ -73,6 +81,5 @@ class ExceptionObject {
 
     private String code;
     private String status;
-    private String exceptionName;
     private String message;
 }

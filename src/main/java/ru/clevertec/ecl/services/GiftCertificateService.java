@@ -1,7 +1,6 @@
 package ru.clevertec.ecl.services;
 
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 
@@ -18,7 +17,9 @@ public interface GiftCertificateService {
 
      List<GiftCertificateDto> findAll(PageRequest page);
 
+     List<GiftCertificateDto> findByCertificateName(String name, String description, PageRequest page);
+
      GiftCertificateDto create(GiftCertificateForCreateDto giftCertificate);
 
-     List<GiftCertificateDto> findByTag(String tagName, Pageable pageRequest);
+     List<GiftCertificateDto> findByTagNameAngCertificateName(String tagName, PageRequest pageRequest);
 }

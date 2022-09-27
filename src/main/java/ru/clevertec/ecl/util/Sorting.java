@@ -2,9 +2,9 @@ package ru.clevertec.ecl.util;
 
 public enum Sorting {
 
-    NAME("t.name"),
+    NAME("name"),
     CREATE_DATE("createDate"),
-    NAME_AND_CREATE_DATE("t.name","createDate");
+    NAME_AND_CREATE_DATE("name","createDate");
 
 
     private final String[] sort;

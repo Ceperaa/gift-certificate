@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.services;
+package ru.clevertec.ecl.services.impl;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +14,7 @@ import ru.clevertec.ecl.model.dto.TagDto;
 import ru.clevertec.ecl.model.dto.TagForCreateDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
+import ru.clevertec.ecl.services.TagService;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
@@ -62,6 +64,7 @@ public class TagServiceImpl implements TagService {
         return mapper.toDto(saveTag(mapper.toEntity(tagDto)));
     }
 
+    @Transactional
     public Tag saveTag(Tag tag) {
         return tagRepository.save(tag);
     }

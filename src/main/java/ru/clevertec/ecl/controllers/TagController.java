@@ -30,11 +30,11 @@ public class TagController {
             BindingResult bindingResult
     ) throws ValidationException {
         validatorHandler.message(bindingResult);
-        return new ResponseEntity<>(tagService.saveTagDto(tagDto)
-                , HttpStatus.CREATED);
+        return new ResponseEntity<>(tagService.saveTagDto(tagDto),
+                HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<TagDto> update(
             @RequestBody Map<String, Object> batch,
             @PathVariable Long id) {
