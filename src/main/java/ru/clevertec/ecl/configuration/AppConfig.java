@@ -81,6 +81,9 @@ public class AppConfig implements WebMvcConfigurer {
         return dataSource;
     }
 
+    //hibernate.jdbc.batch_size=4
+    //hibernate.order_inserts=true
+
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -90,6 +93,8 @@ public class AppConfig implements WebMvcConfigurer {
         properties.put("hibernate.show_sql", showSql);
         properties.put("hibernate.format_sql", formatSql);
         properties.put("hibernate.physical_naming_strategy", strategy);
+        properties.put("hibernate.jdbc.batch_size","3");
+        properties.put("hibernate.order_inserts","true");
         em.setJpaProperties(properties);
         em.setDataSource(dataSource);
         em.setPersistenceProviderClass(HibernatePersistenceProvider.class);

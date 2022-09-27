@@ -1,6 +1,5 @@
 package ru.clevertec.ecl.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 
 import java.util.List;
@@ -22,11 +22,9 @@ class GiftCertificateRepositoryTest {
     @Autowired
     private GiftCertificateRepository giftCertificateRepository;
 
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
+    @Transactional
     void findByNameWithPagination() {
         List<GiftCertificate> byNameWithPagination = giftCertificateRepository
                 .findByNameWithPagination("", PageRequest.of(0, 20));
