@@ -1,11 +1,15 @@
 package ru.clevertec.ecl.repository;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long> {
 
@@ -16,4 +20,11 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
     List<GiftCertificate> findByNameWithPagination(String nameTag,
                                                    Pageable pageable);
 
+    @Override
+    @EntityGraph(attributePaths = {"tag"})
+    Optional<GiftCertificate> findById(Long id);
+
+    @Override
+    @EntityGraph(attributePaths = {"tag"})
+    Page<GiftCertificate> findAll(Example example, Pageable page);
 }

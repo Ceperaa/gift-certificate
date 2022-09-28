@@ -78,6 +78,7 @@ class GiftCertificateServiceImplTest {
         given(giftCertificateRepository.findById(1L)).willReturn(Optional.of(giftCertificate));
         LocalDateTime localDateTime = LocalDateTime.now().minusNanos(0);
         given(mapper.toEntity(giftCertificateForCreateDto, localDateTime, List.of(new Tag()))).willReturn(giftCertificate);
+        given(mapper.toDto(giftCertificate)).willReturn(giftCertificateDto);
         GiftCertificateDto byId = service.findById(1L);
         assertEquals(byId, giftCertificateDto);
     }

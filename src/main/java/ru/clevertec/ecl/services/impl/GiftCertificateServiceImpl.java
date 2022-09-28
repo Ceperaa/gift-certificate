@@ -14,6 +14,7 @@ import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 import ru.clevertec.ecl.services.GiftCertificateService;
+import ru.clevertec.ecl.services.TagCreateCertificate;
 import ru.clevertec.ecl.services.TagService;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateMapper mapper;
-    private final TagService tagService;
+    private final TagCreateCertificate tagService;
 
 
     public GiftCertificateDto findById(Long id) {
@@ -49,9 +50,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @SneakyThrows(JsonMappingException.class)
     public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) {
         giftCertificateMap.put("id", id);
-        giftCertificateMap.put("lastUpdateDate", LocalDateTime.now());
         GiftCertificate giftCertificate = new ObjectMapper().updateValue(findGiftCertificateById(id),
                 giftCertificateMap);
+        giftCertificate.setLastUpdateDate(LocalDateTime.now());
         return mapper.toDto(giftCertificateRepository.save(giftCertificate));
     }
 

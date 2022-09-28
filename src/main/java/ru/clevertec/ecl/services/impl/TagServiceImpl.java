@@ -14,6 +14,7 @@ import ru.clevertec.ecl.model.dto.TagDto;
 import ru.clevertec.ecl.model.dto.TagForCreateDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
+import ru.clevertec.ecl.services.TagCreateCertificate;
 import ru.clevertec.ecl.services.TagService;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class TagServiceImpl implements TagService {
+public class TagServiceImpl implements TagService, TagCreateCertificate {
 
     private final TagRepository tagRepository;
     private final TagMapper mapper;

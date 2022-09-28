@@ -19,8 +19,4 @@ public interface TagService {
     List<TagDto> findAll(PageRequest page);
 
     TagDto saveTagDto(TagForCreateDto tagForCreateDto);
-
-    Tag saveTag(Tag tag);
-
-    List<Tag> mapToTagList(List<String> tagNameList);
 }

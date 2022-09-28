@@ -92,6 +92,8 @@ class TagServiceImplTest {
     @Test
     void givenTagDto_whenSaveTagDto() {
         given(tagRepository.save(tag)).willReturn(tag);
+        given(mapper.toDto(tag)).willReturn(tagDto);
+        given(mapper.toEntity(tagForCreateDto)).willReturn(tag);
         TagDto tagDtoResult = tagService.saveTagDto(tagForCreateDto);
         assertEquals(tagDtoResult, tagDto);
     }
