@@ -12,10 +12,12 @@ import ru.clevertec.ecl.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
+import ru.clevertec.ecl.model.entity.GiftCertificate_;
+import ru.clevertec.ecl.model.entity.Tag_;
+import ru.clevertec.ecl.repository.CustomerSpecifications;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.services.TagCreateCertificate;
-import ru.clevertec.ecl.services.TagService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,7 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     @SneakyThrows(JsonMappingException.class)
     public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) {
-        giftCertificateMap.put("id", id);
+        giftCertificateMap.put(Tag_.ID, id);
         GiftCertificate giftCertificate = new ObjectMapper().updateValue(findGiftCertificateById(id),
                 giftCertificateMap);
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
@@ -57,8 +59,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public List<GiftCertificateDto> findAll(PageRequest page) {
-        return mapper.
-                toDtoList(giftCertificateRepository.findAll((page)).toList());
+        return mapper.toDtoList(
+                giftCertificateRepository.findAll((page)).toList());
     }
 
     @Transactional
@@ -77,8 +79,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .ignoreCase()
                 .stringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         return ExampleMatcher.matchingAll()
-                .withMatcher("name", propertyMatcher)
-                .withMatcher("description", propertyMatcher);
+                .withMatcher(GiftCertificate_.TAG, propertyMatcher)
+                .withMatcher(GiftCertificate_.DESCRIPTION, propertyMatcher);
     }
 
     public List<GiftCertificateDto> findByCertificateName(String name, String description, PageRequest page) {
@@ -94,6 +96,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     public List<GiftCertificateDto> findByTagNameAngCertificateName(String name, PageRequest page) {
-        return mapper.toDtoList(giftCertificateRepository.findByNameWithPagination(name, page));
+        return mapper.toDtoList(giftCertificateRepository.findByName(name, page));
     }
 }

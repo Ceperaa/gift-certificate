@@ -24,7 +24,7 @@ class GiftCertificateRepositoryTest {
     @Transactional
     void findByNameWithPagination() {
         List<GiftCertificate> byNameWithPagination = giftCertificateRepository
-                .findByNameWithPagination("", PageRequest.of(0, 20));
+                .findByName("", PageRequest.of(0, 20));
         assertEquals(byNameWithPagination.size(), 8);
     }
 }

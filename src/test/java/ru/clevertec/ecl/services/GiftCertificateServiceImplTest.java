@@ -129,7 +129,7 @@ class GiftCertificateServiceImplTest {
         PageRequest pageRequest = PageRequest.of(0, 20);
         String tag = "tag";
         String certificate = "certificate";
-        given(giftCertificateRepository.findByNameWithPagination(tag, pageRequest)).willReturn(List.of(giftCertificate));
+        given(giftCertificateRepository.findByName(tag, pageRequest)).willReturn(List.of(giftCertificate));
         service.findByTagNameAngCertificateName(tag, pageRequest);
     }
 }

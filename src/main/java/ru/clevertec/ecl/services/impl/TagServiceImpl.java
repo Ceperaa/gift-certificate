@@ -12,6 +12,8 @@ import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
 import ru.clevertec.ecl.model.dto.TagForCreateDto;
+import ru.clevertec.ecl.model.entity.GiftCertificate;
+import ru.clevertec.ecl.model.entity.GiftCertificate_;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.services.TagCreateCertificate;
@@ -51,18 +53,19 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     @Transactional
     @SneakyThrows(JsonMappingException.class)
     public TagDto update(Map<String, Object> map, Long id) {
-        map.put("id", id);
+        map.put(GiftCertificate_.ID, id);
         Tag tag = new ObjectMapper().updateValue(findTagById(id), map);
         return mapper.toDto(tagRepository.save(tag));
     }
 
     public List<TagDto> findAll(PageRequest page) {
-        return mapper
-                .toDtoList(tagRepository.findAll(page).toList());
+        return mapper.toDtoList(
+                tagRepository.findAll(page).toList());
     }
 
     public TagDto saveTagDto(TagForCreateDto tagDto) {
-        return mapper.toDto(saveTag(mapper.toEntity(tagDto)));
+        return mapper.toDto(
+                saveTag(mapper.toEntity(tagDto)));
     }
 
     @Transactional

@@ -9,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
+import ru.clevertec.ecl.model.entity.GiftCertificate;
+import ru.clevertec.ecl.model.entity.GiftCertificate_;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.util.Sorting;
 import ru.clevertec.ecl.util.ValidatorHandler;
@@ -54,7 +56,7 @@ public class GiftCertificateController {
 
     @GetMapping("/tag")
     public ResponseEntity<List<GiftCertificateDto>> findByTag(
-            @RequestParam(defaultValue = "") String tagName,
+            @RequestParam(required = false) String tagName,
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
@@ -71,7 +73,7 @@ public class GiftCertificateController {
             @RequestParam(required = false) String description,
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset,
-            @RequestParam(defaultValue = "NAME") Sorting sorts
+            @RequestParam(defaultValue = GiftCertificate_.NAME) Sorting sorts
     ) {
         return new ResponseEntity<>(service.findByCertificateName(name, description,
                 PageRequest.of(
