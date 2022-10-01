@@ -62,4 +62,12 @@ public class TagController {
         tagService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // TODO: 30.09.2022           6. Получите наиболее широко используемый тег пользователя с самой высокой стоимостью всех заказов.
+    //             *Создайте отдельную конечную точку для этого запроса.
+    //         *Продемонстрируйте план выполнения SQL для этого запроса (поясните).
+    @GetMapping("most-used-tag/{userId}")
+    ResponseEntity<TagDto> findMostUsedTagByUser(Long userId) {
+        return new ResponseEntity<>(tagService.findMostUsedTagByUser(userId), HttpStatus.OK);
+    }
 }

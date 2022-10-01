@@ -32,6 +32,14 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     private final TagRepository tagRepository;
     private final TagMapper mapper;
 
+    // TODO: 30.09.2022           6. Получите наиболее широко используемый тег пользователя с самой высокой стоимостью всех заказов.
+    //             *Создайте отдельную конечную точку для этого запроса.
+    //         *Продемонстрируйте план выполнения SQL для этого запроса (поясните).
+    @Override
+    public TagDto findMostUsedTagByUser(Long userId) {
+        return null;
+    }
+
     public TagDto findTagDtoById(Long id) {
         return mapper.toDto(findTagById(id));
     }

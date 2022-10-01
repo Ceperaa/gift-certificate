@@ -50,11 +50,11 @@ dependencies {
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.yaml}"
     implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
+    //testImplementation "org.junit.jupiter:junit-jupiter-engine:${versions.junit}"
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
-    implementation "com.google.code.gson:gson:${versions.gson}"
-    testImplementation 'com.h2database:h2:2.1.214'
+  //  implementation "com.google.code.gson:gson:${versions.gson}"
+    testImplementation 'com.h2database:h2'
 }
 
 configurations {

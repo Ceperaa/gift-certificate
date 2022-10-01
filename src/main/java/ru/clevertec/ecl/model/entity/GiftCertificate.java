@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.springframework.data.jpa.repository.EntityGraph;
 import ru.clevertec.ecl.util.LocalDateStringConvert;
 import ru.clevertec.ecl.util.StringLocalDateConvert;
 
@@ -37,6 +36,10 @@ public class GiftCertificate {
     @JsonSerialize(converter = LocalDateStringConvert.class)
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime lastUpdateDate;
+
+    @OneToMany
+    @JoinColumn(name = "gift_certificate_id")
+    private List<Orders> orders;
 
     @ToString.Exclude
     @ManyToMany

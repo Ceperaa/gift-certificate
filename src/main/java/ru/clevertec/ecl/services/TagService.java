@@ -10,6 +10,8 @@ import java.util.Map;
 
 public interface TagService {
 
+    TagDto findMostUsedTagByUser(Long userId);
+
     TagDto findTagDtoById(Long id);
 
     void delete(Long id);

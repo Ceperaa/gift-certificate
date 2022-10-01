@@ -16,43 +16,64 @@ import ru.clevertec.ecl.model.entity.GiftCertificate_;
 import ru.clevertec.ecl.model.entity.Tag_;
 import ru.clevertec.ecl.repository.CustomerSpecifications;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
+import ru.clevertec.ecl.services.EntityService;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.services.TagCreateCertificate;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class GiftCertificateServiceImpl implements GiftCertificateService {
+public class GiftCertificateServiceImpl implements GiftCertificateService, EntityService<GiftCertificate> {
 
     private final GiftCertificateRepository giftCertificateRepository;
     private final GiftCertificateMapper mapper;
     private final TagCreateCertificate tagService;
 
-
-    public GiftCertificateDto findById(Long id) {
-        return mapper
-                .toDto(findGiftCertificateById(id));
+    // TODO: 30.09.2022 7. Поиск подарочных сертификатов по нескольким тегам («и» условие).
+    @Override
+    public List<GiftCertificateDto> findGiftCertificateByTags(String[] tags, PageRequest page) {
+        List<GiftCertificate> all = giftCertificateRepository
+                .findAll(CustomerSpecifications.byTags1(Arrays.asList(tags)));
+        return mapper.toDtoList(all);
     }
 
-    private GiftCertificate findGiftCertificateById(Long id) {
+    public GiftCertificateDto findGiftCertificateDtoById(Long id) {
+        return mapper
+                .toDto(findById(id));
+    }
+
+    @Override
+    public GiftCertificate findById(Long id) {
         return giftCertificateRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
     }
 
     @Transactional
     public void delete(Long id) {
-        giftCertificateRepository.delete(findGiftCertificateById(id));
+        giftCertificateRepository.delete(findById(id));
+    }
+
+    // TODO: 30.09.2022 1. Изменить отдельное поле подарочного сертификата
+    //  (например, реализовать возможность изменения только срока действия сертификата или только цены).
+    @Override
+    public GiftCertificateDto updatePrice(BigDecimal price, Long id) {
+        GiftCertificateDto giftCertificateDto = findGiftCertificateDtoById(id);
+        giftCertificateDto.setPrice(price);
+        giftCertificateDto.setLastUpdateDate(LocalDateTime.now());
+        return giftCertificateDto;
     }
 
     @Transactional
     @SneakyThrows(JsonMappingException.class)
     public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) {
         giftCertificateMap.put(Tag_.ID, id);
-        GiftCertificate giftCertificate = new ObjectMapper().updateValue(findGiftCertificateById(id),
+        GiftCertificate giftCertificate = new ObjectMapper().updateValue(findById(id),
                 giftCertificateMap);
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
         return mapper.toDto(giftCertificateRepository.save(giftCertificate));
@@ -95,7 +116,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return mapper.toDtoList(certificateDtoPage.toList());
     }
 
-    public List<GiftCertificateDto> findByTagNameAngCertificateName(String name, PageRequest page) {
-        return mapper.toDtoList(giftCertificateRepository.findByName(name, page));
+    public List<GiftCertificateDto> findByTagName(String name, PageRequest page) {
+        return mapper.toDtoList(giftCertificateRepository.findAll(CustomerSpecifications.byTagName(name), page)
+                .toList());
     }
 }

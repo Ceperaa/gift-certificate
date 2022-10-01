@@ -16,9 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 class GiftCertificateRepositoryTest {
 
-    @Autowired
-    private GiftCertificateRepository giftCertificateRepository;
+    private final GiftCertificateRepository giftCertificateRepository;
 
+    @Autowired
+    GiftCertificateRepositoryTest(GiftCertificateRepository giftCertificateRepository) {
+        this.giftCertificateRepository = giftCertificateRepository;
+    }
 
     @Test
     @Transactional

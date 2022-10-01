@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.GiftCertificate_;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.util.Sorting;
@@ -17,6 +16,7 @@ import ru.clevertec.ecl.util.ValidatorHandler;
 
 import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class GiftCertificateController {
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
-        return new ResponseEntity<>(service.findByTagNameAngCertificateName(tagName,
+        return new ResponseEntity<>(service.findByTagName(tagName,
                 PageRequest.of(
                         offset,
                         limit
@@ -85,12 +85,27 @@ public class GiftCertificateController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<GiftCertificateDto> findById(@PathVariable long id) {
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(service.findGiftCertificateDtoById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
+    public ResponseEntity delete(@PathVariable long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // TODO: 30.09.2022 1. Изменить отдельное поле подарочного сертификата
+    //  (например, реализовать возможность изменения только срока действия сертификата или только цены).
+    @PatchMapping("/price/{id}")
+    public ResponseEntity<GiftCertificateDto> updatePrice(@RequestBody BigDecimal price,
+                                                          @PathVariable Long id) {
+        return new ResponseEntity<>(service.updatePrice(price, id),
+                HttpStatus.CREATED);
+    }
+
+    //  todo  7. Поиск подарочных сертификатов по нескольким тегам («и» условие).
+    @GetMapping("/by-tags")
+    ResponseEntity<List<GiftCertificateDto>> findGiftCertificateByTags(String[] tags) {
+        return new ResponseEntity<>(service.findGiftCertificateByTags(tags, PageRequest.of(0, 20)), HttpStatus.OK);
     }
 }

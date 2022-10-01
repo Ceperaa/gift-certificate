@@ -79,7 +79,7 @@ class GiftCertificateServiceImplTest {
         LocalDateTime localDateTime = LocalDateTime.now().minusNanos(0);
         given(mapper.toEntity(giftCertificateForCreateDto, localDateTime, List.of(new Tag()))).willReturn(giftCertificate);
         given(mapper.toDto(giftCertificate)).willReturn(giftCertificateDto);
-        GiftCertificateDto byId = service.findById(1L);
+        GiftCertificateDto byId = service.findGiftCertificateDtoById(1L);
         assertEquals(byId, giftCertificateDto);
     }
 
@@ -130,6 +130,6 @@ class GiftCertificateServiceImplTest {
         String tag = "tag";
         String certificate = "certificate";
         given(giftCertificateRepository.findByName(tag, pageRequest)).willReturn(List.of(giftCertificate));
-        service.findByTagNameAngCertificateName(tag, pageRequest);
+        service.findByTagName(tag, pageRequest);
     }
 }
