@@ -9,11 +9,12 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GiftCertificateForCreateDto {
+public class GiftCertificatePutDto {
 
     @NotEmpty
     @Size(min = 2,max = 30)

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import org.springframework.data.jpa.repository.EntityGraph;
 import ru.clevertec.ecl.util.LocalDateStringConvert;
 import ru.clevertec.ecl.util.StringLocalDateConvert;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -40,5 +40,11 @@ public class GiftCertificate {
 
     @ToString.Exclude
     @ManyToMany
-    private List<Tag> tag;
+    private List<Tag> tag = new ArrayList<>();
+
+
+    @PreUpdate
+    public void setLastUpdateDate() {
+        this.lastUpdateDate = LocalDateTime.now();
+    }
 }

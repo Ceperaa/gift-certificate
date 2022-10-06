@@ -7,14 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
+import ru.clevertec.ecl.model.dto.TagForPutDto;
 import ru.clevertec.ecl.services.TagService;
 import ru.clevertec.ecl.util.ValidatorHandler;
 
 import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/tags")
@@ -26,7 +25,7 @@ public class TagController {
 
     @PostMapping
     public ResponseEntity<TagDto> add(
-            @RequestBody @Valid TagForCreateDto tagDto,
+            @RequestBody @Valid TagForPutDto tagDto,
             BindingResult bindingResult
     ) throws ValidationException {
         validatorHandler.message(bindingResult);
@@ -36,9 +35,9 @@ public class TagController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<TagDto> update(
-            @RequestBody Map<String, Object> batch,
+            @RequestBody TagForPutDto tagForCreateDto,
             @PathVariable Long id) {
-        return new ResponseEntity<>(tagService.update(batch, id),
+        return new ResponseEntity<>(tagService.update(tagForCreateDto, id),
                 HttpStatus.CREATED);
     }
 

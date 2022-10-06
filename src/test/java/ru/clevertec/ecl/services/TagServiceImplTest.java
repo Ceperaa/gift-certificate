@@ -6,17 +6,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import ru.clevertec.ecl.mapper.TagMapperImpl;
+import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
+import ru.clevertec.ecl.model.dto.TagForPutDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,10 +27,10 @@ class TagServiceImplTest {
     @Mock
     private TagRepository tagRepository;
     @Mock
-    private TagMapperImpl mapper;
+    private TagMapper mapper;
     private Tag tag;
     private TagDto tagDto;
-    private TagForCreateDto tagForCreateDto;
+    private TagForPutDto tagForCreateDto;
 
     TagServiceImplTest() {
         MockitoAnnotations.openMocks(this);
@@ -48,7 +46,7 @@ class TagServiceImplTest {
         tagDto = TagDto.builder()
                 .id(1L)
                 .name("tag").build();
-        tagForCreateDto = TagForCreateDto.builder()
+        tagForCreateDto = TagForPutDto.builder()
                 .name("tag").build();
     }
 
@@ -72,9 +70,8 @@ class TagServiceImplTest {
         given(tagRepository.findById(1L)).willReturn(Optional.of(tag));
         given(tagRepository.save(tag)).willReturn(tag);
         given(mapper.toDto(tag)).willReturn(tagDto);
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "tag");
-        TagDto tagDtoResult = tagService.update(map, 1L);
+        given(mapper.toPutEntity(1L,tagForCreateDto)).willReturn(tag);
+        TagDto tagDtoResult = tagService.update(tagForCreateDto, 1L);
         assertEquals(tagDtoResult, tagDto);
     }
 

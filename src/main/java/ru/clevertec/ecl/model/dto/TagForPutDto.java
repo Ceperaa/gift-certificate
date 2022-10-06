@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TagForCreateDto {
+public class TagForPutDto {
 
     @NotEmpty
     @Size(min = 2, max = 30)

@@ -1,28 +1,24 @@
 package ru.clevertec.ecl.services.impl;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
+import ru.clevertec.ecl.model.dto.TagForPutDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.services.TagCreateCertificate;
 import ru.clevertec.ecl.services.TagService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -38,11 +34,19 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
 
     private Tag findTagById(Long id) {
         return tagRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
+                .orElseThrow(() -> new EntityNotFoundException(GiftCertificateDto.class, id));
     }
 
-    private Optional<Tag> findTagByName(String name) {
+    public Optional<Tag> findTagByName(String name) {
         return tagRepository.findTagByName(name);
+    }
+
+    public List<Tag> saveTagIfNotExists(List<String> dtoTag) {
+        return dtoTag
+                .stream()
+                .filter(tag1 -> findTagByName(tag1).isEmpty())
+                .map(tag1 -> saveTag(Tag.builder().name(tag1).build()))
+                .collect(toList());
     }
 
     @Transactional
@@ -51,11 +55,9 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     }
 
     @Transactional
-    @SneakyThrows(JsonMappingException.class)
-    public TagDto update(Map<String, Object> map, Long id) {
-        map.put(GiftCertificate_.ID, id);
-        Tag tag = new ObjectMapper().updateValue(findTagById(id), map);
-        return mapper.toDto(tagRepository.save(tag));
+    public TagDto update(TagForPutDto tagForCreateDto, Long id) {
+        Tag giftCertificate = mapper.toPutEntity(id, tagForCreateDto);
+        return mapper.toDto(tagRepository.save(giftCertificate));
     }
 
     public List<TagDto> findAll(PageRequest page) {
@@ -63,7 +65,7 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
                 tagRepository.findAll(page).toList());
     }
 
-    public TagDto saveTagDto(TagForCreateDto tagDto) {
+    public TagDto saveTagDto(TagForPutDto tagDto) {
         return mapper.toDto(
                 saveTag(mapper.toEntity(tagDto)));
     }
@@ -72,6 +74,8 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     public Tag saveTag(Tag tag) {
         return tagRepository.save(tag);
     }
+
+
 
     public List<Tag> mapToTagList(List<String> tagNameList) {
         return tagNameList

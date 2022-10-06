@@ -2,11 +2,9 @@ package ru.clevertec.ecl.services;
 
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
-import ru.clevertec.ecl.model.entity.Tag;
+import ru.clevertec.ecl.model.dto.TagForPutDto;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TagService {
 
@@ -14,9 +12,10 @@ public interface TagService {
 
     void delete(Long id);
 
-    TagDto update(Map<String, Object> giftCertificateMap, Long id);
+    TagDto update(TagForPutDto tagForCreateDto, Long id);
 
     List<TagDto> findAll(PageRequest page);
 
-    TagDto saveTagDto(TagForCreateDto tagForCreateDto);
+    TagDto saveTagDto(TagForPutDto tagForCreateDto);
+
 }

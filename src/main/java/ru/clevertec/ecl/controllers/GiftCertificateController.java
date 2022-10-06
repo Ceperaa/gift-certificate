@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
+import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.util.Sorting;
 import ru.clevertec.ecl.util.ValidatorHandler;
@@ -18,7 +16,6 @@ import ru.clevertec.ecl.util.ValidatorHandler;
 import javax.validation.Valid;
 import javax.xml.bind.ValidationException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/gift-certificates")
@@ -30,7 +27,7 @@ public class GiftCertificateController {
 
     @PostMapping
     public ResponseEntity<GiftCertificateDto> add(
-            @RequestBody @Valid GiftCertificateForCreateDto giftCertificateDto,
+            @RequestBody @Valid GiftCertificatePutDto giftCertificateDto,
             BindingResult bindingResult
     ) throws ValidationException {
         validatorHandler.message(bindingResult);
@@ -39,10 +36,9 @@ public class GiftCertificateController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<GiftCertificateDto> update(@RequestBody Map<String, Object> map,
+    public ResponseEntity<GiftCertificateDto> update(@RequestBody GiftCertificatePutDto giftCertificateDto,
                                                      @PathVariable Long id) {
-        return new ResponseEntity<>(service.update(map, id),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(service.update(giftCertificateDto, id), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -60,7 +56,7 @@ public class GiftCertificateController {
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset
     ) {
-        return new ResponseEntity<>(service.findByTagNameAngCertificateName(tagName,
+        return new ResponseEntity<>(service.findByTagName(tagName,
                 PageRequest.of(
                         offset,
                         limit
@@ -73,9 +69,9 @@ public class GiftCertificateController {
             @RequestParam(required = false) String description,
             @RequestParam(defaultValue = "20") Integer limit,
             @RequestParam(defaultValue = "0") Integer offset,
-            @RequestParam(defaultValue = GiftCertificate_.NAME) Sorting sorts
+            @RequestParam(defaultValue = "name") Sorting sorts
     ) {
-        return new ResponseEntity<>(service.findByCertificateName(name, description,
+        return new ResponseEntity<>(service.findByCertificateNameAndDescription(name, description,
                 PageRequest.of(
                         offset,
                         limit,

@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.bind.ValidationException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class ControllerAdvice {
         return aggregate(e.getMessage(), unprocessableEntity, code(e, unprocessableEntity));
     }
 
-    @ExceptionHandler(value = ObjectNotFoundException.class)
+    @ExceptionHandler(value = EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionObject response404(@RequestBody Exception e) {
         HttpStatus notFound = HttpStatus.NOT_FOUND;
@@ -62,14 +64,19 @@ public class ControllerAdvice {
                 .build();
     }
 
-    private String code(Exception e, HttpStatus status) {
+    @PostConstruct
+    public Map<Class<?>, String> map() {
         Map<Class<?>, String> map = new HashMap<>();
         map.put(JsonParseException.class, "01");
         map.put(JsonMappingException.class, "02");
         map.put(ValidationException.class, "03");
         map.put(IllegalArgumentException.class, "04");
-        map.put(ObjectNotFoundException.class, "05");
-        return String.valueOf(status.value()).concat(map.get(e.getClass()));
+        map.put(EntityNotFoundException.class, "05");
+        return map;
+    }
+
+    private String code(Exception e, HttpStatus status){
+        return MessageFormat.format("{0}{1}", status.toString(), map().get(e.getClass().getName()));
     }
 }
 

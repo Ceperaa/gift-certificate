@@ -1,27 +1,23 @@
 package ru.clevertec.ecl.services.impl;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
+import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
-import ru.clevertec.ecl.model.entity.Tag_;
-import ru.clevertec.ecl.repository.CustomerSpecifications;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.services.TagCreateCertificate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +36,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private GiftCertificate findGiftCertificateById(Long id) {
         return giftCertificateRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
+                .orElseThrow(() -> new EntityNotFoundException(GiftCertificateDto.class, id));
     }
 
     @Transactional
@@ -49,12 +45,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Transactional
-    @SneakyThrows(JsonMappingException.class)
-    public GiftCertificateDto update(Map<String, Object> giftCertificateMap, Long id) {
-        giftCertificateMap.put(Tag_.ID, id);
-        GiftCertificate giftCertificate = new ObjectMapper().updateValue(findGiftCertificateById(id),
-                giftCertificateMap);
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+    public GiftCertificateDto update(GiftCertificatePutDto giftCertificateDto, Long id) {
+        GiftCertificate giftCertificateById = findGiftCertificateById(id);
+        giftCertificateById.getTag().addAll(tagService.saveTagIfNotExists(giftCertificateDto.getTagNames()));
+        GiftCertificate giftCertificate = mapper.toEntityPut(id, giftCertificateDto, giftCertificateById);
         return mapper.toDto(giftCertificateRepository.save(giftCertificate));
     }
 
@@ -64,7 +58,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Transactional
-    public GiftCertificateDto create(GiftCertificateForCreateDto giftCertificateDto) {
+    public GiftCertificateDto create(GiftCertificatePutDto giftCertificateDto) {
         return mapper.toDto(giftCertificateRepository
                 .save(mapper.toEntity(
                         giftCertificateDto,
@@ -79,11 +73,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .ignoreCase()
                 .stringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
         return ExampleMatcher.matchingAll()
-                .withMatcher(GiftCertificate_.TAG, propertyMatcher)
-                .withMatcher(GiftCertificate_.DESCRIPTION, propertyMatcher);
+                .withMatcher("tag", propertyMatcher)
+                .withMatcher("description", propertyMatcher);
     }
 
-    public List<GiftCertificateDto> findByCertificateName(String name, String description, PageRequest page) {
+    public List<GiftCertificateDto> findByCertificateNameAndDescription(String name, String description, PageRequest page) {
         Page<GiftCertificate> certificateDtoPage = giftCertificateRepository
                 .findAll(Example.of(GiftCertificate
                                 .builder()
@@ -95,7 +89,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         return mapper.toDtoList(certificateDtoPage.toList());
     }
 
-    public List<GiftCertificateDto> findByTagNameAngCertificateName(String name, PageRequest page) {
+    public List<GiftCertificateDto> findByTagName(String name, PageRequest page) {
         return mapper.toDtoList(giftCertificateRepository.findByName(name, page));
     }
 }

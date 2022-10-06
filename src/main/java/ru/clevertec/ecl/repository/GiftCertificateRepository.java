@@ -7,17 +7,14 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.w3c.dom.stylesheets.LinkStyle;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
-import ru.clevertec.ecl.model.entity.Tag;
-import ru.clevertec.ecl.model.entity.Tag_;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long>, JpaSpecificationExecutor<GiftCertificate> {
 
+    @EntityGraph(attributePaths = "tag")
     @Query(" select gc " +
             " from GiftCertificate gc" +
             " left outer join gc.tag t " +
@@ -27,10 +24,10 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
 
 
     @Override
-    @EntityGraph(attributePaths = GiftCertificate_.TAG)
+    @EntityGraph(attributePaths = "tag")
     Optional<GiftCertificate> findById(Long id);
 
     @Override
-    @EntityGraph(attributePaths = {"tag"})
+    @EntityGraph(attributePaths = "tag")
     Page<GiftCertificate> findAll(Example example, Pageable page);
 }

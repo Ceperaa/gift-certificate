@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
+import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
@@ -18,9 +18,8 @@ import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +34,7 @@ class GiftCertificateServiceImplTest {
     @Mock
     private TagServiceImpl tagService;
     private GiftCertificate giftCertificate;
-    private GiftCertificateForCreateDto giftCertificateForCreateDto;
+    private GiftCertificatePutDto giftCertificateForCreateDto;
     private GiftCertificateDto giftCertificateDto;
     @Mock
     private GiftCertificateMapper mapper;
@@ -56,12 +55,14 @@ class GiftCertificateServiceImplTest {
                 .name("name")
                 .price(BigDecimal.valueOf(10.10))
                 .description("description")
+                .tag(List.of(Tag.builder().name("name").build()))
                 .duration(1)
                 .build();
-        giftCertificateForCreateDto = GiftCertificateForCreateDto.builder()
+        giftCertificateForCreateDto = GiftCertificatePutDto.builder()
                 .name("name")
                 .price(BigDecimal.valueOf(10.10))
                 .description("description")
+                .tagNames(List.of("name"))
                 .duration(1)
                 .build();
         giftCertificateDto = GiftCertificateDto.builder()
@@ -93,12 +94,12 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void whenUpdateGiftCertificate_thenGiftCertificateDto() {
+        List<Tag> of = new ArrayList<>();
         given(giftCertificateRepository.findById(1L)).willReturn(Optional.of(giftCertificate));
+        given(tagService.saveTagIfNotExists(giftCertificateForCreateDto.getTagNames())).willReturn(of);
         given(giftCertificateRepository.save(ArgumentMatchers.any())).willReturn(giftCertificate);
         given(mapper.toDto(giftCertificate)).willReturn(giftCertificateDto);
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "test");
-        GiftCertificateDto update = service.update(map, 1L);
+        GiftCertificateDto update = service.update(giftCertificateForCreateDto, 1L);
         assertEquals(update, giftCertificateDto);
     }
 
@@ -130,6 +131,6 @@ class GiftCertificateServiceImplTest {
         String tag = "tag";
         String certificate = "certificate";
         given(giftCertificateRepository.findByName(tag, pageRequest)).willReturn(List.of(giftCertificate));
-        service.findByTagNameAngCertificateName(tag, pageRequest);
+        service.findByTagName(tag, pageRequest);
     }
 }

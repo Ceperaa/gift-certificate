@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@EqualsAndHashCode(of = {"name"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tag {
 
@@ -21,5 +23,5 @@ public class Tag {
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "tag",fetch = FetchType.LAZY)
-    private List<GiftCertificate> giftCertificate;
+    private List<GiftCertificate> giftCertificate = new ArrayList<>();
 }
