@@ -1,15 +1,18 @@
 package ru.clevertec.ecl.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 import ru.clevertec.ecl.model.dto.UserDto;
-import ru.clevertec.ecl.model.dto.UserForCreateDto;
-import ru.clevertec.ecl.model.entity.Users;
+import ru.clevertec.ecl.model.dto.UserPutDto;
+import ru.clevertec.ecl.model.entity.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    UserDto toDto(Users user);
+    UserDto toDto(User user);
 
-    Users toEntity(UserForCreateDto user);
+    User toEntity(UserPutDto user);
+
+    @Mapping(source = "id", target = "id")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    User toPutEntity(Long id, @MappingTarget User tag, UserPutDto tagDto);
 }

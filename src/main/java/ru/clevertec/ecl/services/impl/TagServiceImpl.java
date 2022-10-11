@@ -1,26 +1,20 @@
 package ru.clevertec.ecl.services.impl;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.ecl.exception.ObjectNotFoundException;
+import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
+import ru.clevertec.ecl.model.dto.TagPutDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.services.TagCreateCertificate;
 import ru.clevertec.ecl.services.TagService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,24 +26,16 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     private final TagRepository tagRepository;
     private final TagMapper mapper;
 
-    // TODO: 30.09.2022           6. Получите наиболее широко используемый тег пользователя с самой высокой стоимостью всех заказов.
-    //             *Создайте отдельную конечную точку для этого запроса.
-    //         *Продемонстрируйте план выполнения SQL для этого запроса (поясните).
-    @Override
-    public TagDto findMostUsedTagByUser(Long userId) {
-        return null;
-    }
-
     public TagDto findTagDtoById(Long id) {
         return mapper.toDto(findTagById(id));
     }
 
     private Tag findTagById(Long id) {
         return tagRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(GiftCertificateDto.class, id));
+                .orElseThrow(() -> new EntityNotFoundException(GiftCertificateDto.class, id));
     }
 
-    private Optional<Tag> findTagByName(String name) {
+    public Optional<Tag> findTagByName(String name) {
         return tagRepository.findTagByName(name);
     }
 
@@ -59,19 +45,17 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     }
 
     @Transactional
-    @SneakyThrows(JsonMappingException.class)
-    public TagDto update(Map<String, Object> map, Long id) {
-        map.put(GiftCertificate_.ID, id);
-        Tag tag = new ObjectMapper().updateValue(findTagById(id), map);
-        return mapper.toDto(tagRepository.save(tag));
+    public TagDto update(TagPutDto tagForCreateDto, Long id) {
+        Tag giftCertificate = mapper.toPutEntity(id, findTagById(id), tagForCreateDto);
+        return mapper.toDto(tagRepository.save(giftCertificate));
     }
 
-    public List<TagDto> findAll(PageRequest page) {
+    public List<TagDto> findAll(Pageable page) {
         return mapper.toDtoList(
                 tagRepository.findAll(page).toList());
     }
 
-    public TagDto saveTagDto(TagForCreateDto tagDto) {
+    public TagDto saveTagDto(TagPutDto tagDto) {
         return mapper.toDto(
                 saveTag(mapper.toEntity(tagDto)));
     }
@@ -81,11 +65,19 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
         return tagRepository.save(tag);
     }
 
-    public List<Tag> mapToTagList(List<String> tagNameList) {
+    public List<Tag> createTagIfNotExists(List<String> tagNameList) {
         return tagNameList
                 .stream()
                 .map((tag) -> findTagByName(tag)
                         .orElseGet(() -> saveTag(Tag.builder().name(tag).build())))
+                .collect(Collectors.toList());
+    }
+
+    public List<Tag> saveTagIfNotExists(List<String> tagNameList) {
+        return tagNameList
+                .stream()
+                .filter(tag1 -> findTagByName(tag1).isEmpty())
+                .map((tag) -> saveTag(Tag.builder().name(tag).build()))
                 .collect(Collectors.toList());
     }
 }

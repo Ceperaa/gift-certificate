@@ -3,17 +3,18 @@ package ru.clevertec.ecl.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDto {
+public class CertificatePriceDto {
 
-    Long id;
-    LocalDateTime createDate;
+    @DecimalMin("00.01")
+    @DecimalMax("100.00")
     BigDecimal price;
 }

@@ -1,32 +1,30 @@
 package ru.clevertec.ecl.services;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import ru.clevertec.ecl.model.dto.CertificatePriceDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificateForCreateDto;
-import ru.clevertec.ecl.model.dto.TagDto;
+import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public interface GiftCertificateService {
 
 
-     List<GiftCertificateDto> findGiftCertificateByTags(String[] tags, PageRequest page);
+     List<GiftCertificateDto> findGiftCertificateByTags(String[] tags, Pageable page);
 
      GiftCertificateDto findGiftCertificateDtoById(Long id);
 
      void delete(Long id);
 
-     GiftCertificateDto updatePrice(BigDecimal price, Long id);
+     GiftCertificateDto updatePrice(CertificatePriceDto certificatePriceDto, Long id);
 
-     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id);
+     GiftCertificateDto update(GiftCertificatePutDto giftCertificateDto, Long id);
 
-     List<GiftCertificateDto> findAll(PageRequest page);
+     List<GiftCertificateDto> findAll(Pageable page);
 
-     List<GiftCertificateDto> findByCertificateName(String name, String description, PageRequest page);
+     List<GiftCertificateDto> findByCertificateNameAndDescription(String name, String description, Pageable page);
 
-     GiftCertificateDto create(GiftCertificateForCreateDto giftCertificate);
+     GiftCertificateDto createGiftCertificateDto(GiftCertificatePutDto giftCertificate);
 
-     List<GiftCertificateDto> findByTagName(String tagName, PageRequest pageRequest);
+     List<GiftCertificateDto> findByTagName(String tagName, Pageable pageRequest);
 }

@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,10 @@ public class Orders {
     private GiftCertificate giftCertificate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Users user;
-
+    private User user;
+    
+    @PrePersist
+    public void setCreateDate() {
+        this.createDate = LocalDateTime.now();
+    }
 }

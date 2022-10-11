@@ -1,56 +1,52 @@
 package ru.clevertec.ecl.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.UserDto;
-import ru.clevertec.ecl.model.dto.UserForCreateDto;
+import ru.clevertec.ecl.model.dto.UserMaxSaleDto;
+import ru.clevertec.ecl.model.dto.UserPutDto;
 import ru.clevertec.ecl.services.UserService;
-import ru.clevertec.ecl.util.ValidatorHandler;
 
 import javax.validation.Valid;
-import javax.xml.bind.ValidationException;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.Positive;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final ValidatorHandler validatorHandler;
 
     @PostMapping
-    public ResponseEntity<UserDto> add(
-            @RequestBody @Valid UserForCreateDto tagDto,
-            BindingResult bindingResult
-    ) throws ValidationException {
-        validatorHandler.message(bindingResult);
+    public ResponseEntity<UserDto> add(@RequestBody @Valid UserPutDto tagDto) {
         return new ResponseEntity<>(userService.saveUserDto(tagDto),
                 HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> update(
-            @RequestBody Map<String, Object> batch,
-            @PathVariable Long id) {
-        return new ResponseEntity<>(userService.update(batch, id),
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@RequestBody @Valid UserPutDto userPutDto,
+                                          @PathVariable Long id) {
+        return new ResponseEntity<>(userService.update(userPutDto, id),
                 HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> findById(@PathVariable long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable @Positive Long id) {
         return new ResponseEntity<>(userService.findUserDtoById(id),
                 HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable @Positive Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("most-used-tag")
+    ResponseEntity<UserMaxSaleDto> findMostUsedTagByUser() {
+        return new ResponseEntity<>(userService.findMostUsedTagByUser(),
+                HttpStatus.OK);
     }
 }

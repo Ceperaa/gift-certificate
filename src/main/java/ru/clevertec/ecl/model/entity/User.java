@@ -10,7 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Users {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +20,6 @@ public class Users {
     private String surname;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Orders> orders;
-
-
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }

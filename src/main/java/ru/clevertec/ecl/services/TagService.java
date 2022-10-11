@@ -1,24 +1,20 @@
 package ru.clevertec.ecl.services;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
-import ru.clevertec.ecl.model.entity.Tag;
+import ru.clevertec.ecl.model.dto.TagPutDto;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TagService {
-
-    TagDto findMostUsedTagByUser(Long userId);
 
     TagDto findTagDtoById(Long id);
 
     void delete(Long id);
 
-    TagDto update(Map<String, Object> giftCertificateMap, Long id);
+    TagDto update(TagPutDto tagForCreateDto, Long id);
 
-    List<TagDto> findAll(PageRequest page);
+    List<TagDto> findAll(Pageable page);
 
-    TagDto saveTagDto(TagForCreateDto tagForCreateDto);
+    TagDto saveTagDto(TagPutDto tagForCreateDto);
 }

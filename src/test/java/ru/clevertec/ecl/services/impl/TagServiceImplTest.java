@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.services;
+package ru.clevertec.ecl.services.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,15 +8,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.mapper.TagMapperImpl;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForCreateDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
+import ru.clevertec.ecl.model.dto.TagPutDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
-import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +28,7 @@ class TagServiceImplTest {
     private TagMapperImpl mapper;
     private Tag tag;
     private TagDto tagDto;
-    private TagForCreateDto tagForCreateDto;
+    private TagPutDto tagForCreateDto;
 
     TagServiceImplTest() {
         MockitoAnnotations.openMocks(this);
@@ -41,15 +37,9 @@ class TagServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        tag = Tag.builder()
-                .id(1L)
-                .name("tag")
-                .giftCertificate(List.of(new GiftCertificate())).build();
-        tagDto = TagDto.builder()
-                .id(1L)
-                .name("tag").build();
-        tagForCreateDto = TagForCreateDto.builder()
-                .name("tag").build();
+        tag = ObjectSupplier.getTag();
+        tagDto = ObjectSupplier.getTagDto();
+        tagForCreateDto = ObjectSupplier.getTagPutDto();
     }
 
     @Test
@@ -70,12 +60,11 @@ class TagServiceImplTest {
     @Test
     void givenTagDto_whenUpdate() {
         given(tagRepository.findById(1L)).willReturn(Optional.of(tag));
-        given(tagRepository.save(tag)).willReturn(tag);
         given(mapper.toDto(tag)).willReturn(tagDto);
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "tag");
-        TagDto tagDtoResult = tagService.update(map, 1L);
-        assertEquals(tagDtoResult, tagDto);
+        given(mapper.toPutEntity(1L, tag, tagForCreateDto)).willReturn(tag);
+        given(tagRepository.save(tag)).willReturn(tag);
+        TagDto update = tagService.update(tagForCreateDto, 1L);
+        assertEquals(update, tagDto);
     }
 
     @Test

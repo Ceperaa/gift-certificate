@@ -1,9 +1,8 @@
 package ru.clevertec.ecl.services;
 
 import ru.clevertec.ecl.model.dto.UserDto;
-import ru.clevertec.ecl.model.dto.UserForCreateDto;
-
-import java.util.Map;
+import ru.clevertec.ecl.model.dto.UserMaxSaleDto;
+import ru.clevertec.ecl.model.dto.UserPutDto;
 
 public interface UserService {
 
@@ -11,9 +10,11 @@ public interface UserService {
 
     void delete(Long id);
 
-    UserDto update(Map<String, Object> giftCertificateMap, Long id);
+    UserDto update(UserPutDto userPutDto, Long id);
 
-    UserDto saveUserDto(UserForCreateDto tagForCreateDto);
+    UserDto saveUserDto(UserPutDto tagForCreateDto);
+
+    UserMaxSaleDto findMostUsedTagByUser();
 
 
 }

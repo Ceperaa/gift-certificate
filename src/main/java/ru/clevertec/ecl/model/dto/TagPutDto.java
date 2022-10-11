@@ -1,19 +1,20 @@
 package ru.clevertec.ecl.model.dto;
 
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderDto {
+public class TagPutDto {
 
-    Long id;
-    LocalDateTime createDate;
-    BigDecimal price;
+    @NotEmpty
+    @Size(min = 2, max = 30)
+    String name;
 }

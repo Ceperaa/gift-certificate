@@ -28,6 +28,6 @@ class GiftCertificateRepositoryTest {
     void findByNameWithPagination() {
         List<GiftCertificate> byNameWithPagination = giftCertificateRepository
                 .findByName("", PageRequest.of(0, 20));
-        assertEquals(byNameWithPagination.size(), 8);
+        assertEquals(byNameWithPagination.size(), 4);
     }
 }

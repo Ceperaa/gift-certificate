@@ -11,7 +11,7 @@ public interface OrderService {
 
     OrderDto createOrder(Long userId, Long certificateId);
 
-    List<OrderDto> findOrdersByUser(Long userId, PageRequest page);
+    List<OrderDto> findOrderListByUser(Long userId, PageRequest page);
 
     OrderInformationDto findOrderByUser(Long userId, Long orderId);
 }

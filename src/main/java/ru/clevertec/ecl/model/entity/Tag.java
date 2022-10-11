@@ -1,10 +1,15 @@
 package ru.clevertec.ecl.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +24,7 @@ public class Tag {
     private Long id;
     private String name;
 
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "tag",fetch = FetchType.LAZY)
-    private List<GiftCertificate> giftCertificate;
+//    @ToString.Exclude
+//    @ManyToMany(mappedBy = "tag",fetch = FetchType.LAZY)
+//    private List<GiftCertificate> giftCertificate;
 }

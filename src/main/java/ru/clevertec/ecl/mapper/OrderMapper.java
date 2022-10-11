@@ -5,16 +5,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import ru.clevertec.ecl.model.dto.OrderDto;
 import ru.clevertec.ecl.model.dto.OrderInformationDto;
-import ru.clevertec.ecl.model.entity.Orders;
+import ru.clevertec.ecl.model.entity.Order;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OrderMapper {
 
-    OrderDto toDto(Orders order);
+    OrderDto toDto(Order order);
 
-    List<OrderDto> toDtoList(List<Orders> orders);
+    List<OrderDto> toDtoList(List<Order> orders);
 
-    OrderInformationDto toInformationDto(Orders order);
+    OrderInformationDto toInformationDto(Order order);
 }

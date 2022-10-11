@@ -10,6 +10,7 @@ import ru.clevertec.ecl.util.StringLocalDateConvert;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -39,9 +40,20 @@ public class GiftCertificate {
 
     @OneToMany
     @JoinColumn(name = "gift_certificate_id")
-    private List<Orders> orders;
+    private List<Order> orders;
 
     @ToString.Exclude
     @ManyToMany
-    private List<Tag> tag;
+    private List<Tag> tag = new ArrayList<>();
+
+    @PreUpdate
+    public void setLastUpdateDate() {
+        this.lastUpdateDate = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void setCreateDate() {
+        this.lastUpdateDate = LocalDateTime.now();
+        this.createDate = LocalDateTime.now();
+    }
 }
