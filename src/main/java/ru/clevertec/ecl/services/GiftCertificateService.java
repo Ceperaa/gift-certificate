@@ -10,7 +10,7 @@ import java.util.List;
 public interface GiftCertificateService {
 
 
-     List<GiftCertificateDto> findGiftCertificateByTags(String[] tags, Pageable page);
+     List<GiftCertificateDto> findGiftCertificateByTags(List<String> tags, Pageable page);
 
      GiftCertificateDto findGiftCertificateDtoById(Long id);
 

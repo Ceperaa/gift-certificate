@@ -51,13 +51,11 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     }
 
     public List<TagDto> findAll(Pageable page) {
-        return mapper.toDtoList(
-                tagRepository.findAll(page).toList());
+        return mapper.toDtoList(tagRepository.findAll(page).toList());
     }
 
     public TagDto saveTagDto(TagPutDto tagDto) {
-        return mapper.toDto(
-                saveTag(mapper.toEntity(tagDto)));
+        return mapper.toDto(saveTag(mapper.toEntity(tagDto)));
     }
 
     @Transactional

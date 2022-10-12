@@ -22,6 +22,6 @@ class UserRepositoryTest {
     @Test
     void testFindByMaxSaleAngMaxUseTag() {
         UserMaxSaleDto byMaxSaleAngMaxUseTag = userRepository.findByMaxSaleAngMaxUseTag();
-        assertEquals(byMaxSaleAngMaxUseTag.getName(), null);
+        assertEquals(byMaxSaleAngMaxUseTag.getName(), "name");
     }
 }

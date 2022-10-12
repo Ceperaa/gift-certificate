@@ -93,7 +93,6 @@ public class ControllerAdvice {
 }
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 class ExceptionObject {

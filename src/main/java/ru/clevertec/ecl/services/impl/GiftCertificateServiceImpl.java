@@ -3,7 +3,6 @@ package ru.clevertec.ecl.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,6 @@ import ru.clevertec.ecl.services.EntityService;
 import ru.clevertec.ecl.services.GiftCertificateService;
 import ru.clevertec.ecl.services.TagCreateCertificate;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -48,8 +46,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
 
     @Override
     public GiftCertificateDto updatePrice(CertificatePriceDto certificatePriceDto, Long id) {
-        GiftCertificate giftCertificate = save(mapper.toEntity(certificatePriceDto, findById(id)));
-        return mapper.toDto(giftCertificate);
+        return mapper.toDto(save(mapper.toEntity(certificatePriceDto, findById(id))));
     }
 
     @Transactional
@@ -87,29 +84,27 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
                 .withMatcher("description", propertyMatcher);
     }
 
-    public List<GiftCertificateDto> findByCertificateNameAndDescription(String name,
-                                                                        String description,
-                                                                        Pageable page) {
-        Page<GiftCertificate> certificateDtoPage = giftCertificateRepository
+    public List<GiftCertificateDto> findByCertificateNameAndDescription(
+            String name,
+            String description,
+            Pageable page) {
+        return mapper.toDtoList(giftCertificateRepository
                 .findAll(Example.of(GiftCertificate
                                 .builder()
                                 .name(name)
                                 .description(description)
                                 .build(),
                         matcherConfig()),
-                        page);
-        return mapper.toDtoList(certificateDtoPage.toList());
+                        page).toList());
     }
 
     public List<GiftCertificateDto> findByTagName(String name, Pageable page) {
-        List<GiftCertificate> list = giftCertificateRepository.findByName(name, page);
-        return mapper.toDtoList(list);
+        return mapper.toDtoList(giftCertificateRepository.findByName(name, page));
     }
 
     @Override
-    public List<GiftCertificateDto> findGiftCertificateByTags(String[] tags, Pageable page) {
-        List<GiftCertificate> all = giftCertificateRepository
-                .findAll(CustomerSpecifications.byMultipleTags(Arrays.asList(tags)),page).toList();
-        return mapper.toDtoList(all);
+    public List<GiftCertificateDto> findGiftCertificateByTags(List<String> tags, Pageable page) {
+        return mapper.toDtoList(giftCertificateRepository
+                .findAll(CustomerSpecifications.byMultipleTags(tags), page).toList());
     }
 }

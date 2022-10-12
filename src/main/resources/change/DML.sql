@@ -46,3 +46,10 @@ INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id)
 VALUES (3, 2);
 INSERT INTO public.gift_certificate_tag (gift_certificate_id, tag_id)
 VALUES (4, 1);
+
+--changeset Sergey:5.1
+INSERT INTO public.users (name, surname)
+VALUES ('name', 'surname');
+INSERT INTO public.orders (create_date, price, user_id, gift_certificate_id)
+VALUES ('2022-09-30 20:28:21', 10.00, 1, 1);
+

@@ -83,12 +83,6 @@ public class ObjectSupplier {
                 .build();
     }
 
-    public static UserPutDto getUserPutDto() {
-        return UserPutDto.builder()
-                .name("name")
-                .build();
-    }
-
     public static Order getOrder() {
         return Order.builder()
                 .id(1L)

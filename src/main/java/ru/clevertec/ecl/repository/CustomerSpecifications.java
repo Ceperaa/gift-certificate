@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class CustomerSpecifications {
 
     public static Specification<GiftCertificate> byMultipleTags(List<String> tags) {
+        if (tags == null) return null;
         AtomicReference<Specification<GiftCertificate>> specification = new AtomicReference<>(Specification.where(null));
         tags
                 .stream()

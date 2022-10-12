@@ -7,7 +7,6 @@ import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.UserMapper;
 import ru.clevertec.ecl.model.dto.UserDto;
 import ru.clevertec.ecl.model.dto.UserMaxSaleDto;
-import ru.clevertec.ecl.model.dto.UserPutDto;
 import ru.clevertec.ecl.model.entity.User;
 import ru.clevertec.ecl.repository.UserRepository;
 import ru.clevertec.ecl.services.EntityService;
@@ -24,24 +23,6 @@ public class UserServiceImpl implements UserService, EntityService<User> {
     @Override
     public UserDto findUserDtoById(Long id) {
         return mapper.toDto(findById(id));
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        userRepository.delete(findById(id));
-    }
-
-    @Transactional
-    public UserDto update(UserPutDto userPutDto, Long id) {
-        User users = mapper.toPutEntity(id, findById(id), userPutDto);
-        return mapper.toDto(userRepository.save(users));
-    }
-
-    @Override
-    @Transactional
-    public UserDto saveUserDto(UserPutDto userDto) {
-        return mapper.toDto(userRepository.save(mapper.toEntity(userDto)));
     }
 
     @Override
