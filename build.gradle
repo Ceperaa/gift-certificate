@@ -13,23 +13,6 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-//configurations {
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
-//}
-
-//tasks.withType(JavaCompile) {
-//    options.annotationProcessorGeneratedSourcesDirectory = file("src/generated/java")
-//}
-//sourceSets {
-//    generated {
-//        java {
-//            srcDirs = ['src/generated/java']
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
 }
@@ -38,31 +21,25 @@ ext.versions = [
         'mapStruct': '1.5.2.Final',
 ]
 
-
-
 dependencies {
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
-    runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-
     implementation 'org.liquibase:liquibase-core'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
-}
+    runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
 
-//configurations {
-//    all*.exclude module : 'spring-boot-starter-logging'
-//}
+}
 
 configurations.all {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'

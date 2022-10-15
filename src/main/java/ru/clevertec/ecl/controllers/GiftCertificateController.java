@@ -8,8 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.CertificatePriceDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateCreateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.services.GiftCertificateService;
 
 import javax.validation.Valid;
@@ -26,13 +27,13 @@ public class GiftCertificateController {
     private final GiftCertificateService service;
 
     @PostMapping
-    public ResponseEntity<GiftCertificateDto> add(@RequestBody @Valid GiftCertificatePutDto giftCertificateDto) {
+    public ResponseEntity<GiftCertificateDto> add(@RequestBody @Valid GiftCertificateCreateDto giftCertificateDto) {
         return new ResponseEntity<>(service.createGiftCertificateDto(giftCertificateDto),
                 HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GiftCertificateDto> update(@RequestBody @Valid GiftCertificatePutDto giftCertificatePutDto,
+    public ResponseEntity<GiftCertificateDto> update(@RequestBody @Valid GiftCertificateUpdateDto giftCertificatePutDto,
                                                      @PathVariable @Positive Long id) {
         return new ResponseEntity<>(service.update(giftCertificatePutDto, id),
                 HttpStatus.CREATED);

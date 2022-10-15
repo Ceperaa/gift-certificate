@@ -4,7 +4,6 @@ package ru.clevertec.ecl.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
@@ -12,9 +11,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TagPutDto {
+public class TagUpdateDto {
 
-    @NotEmpty
     @Size(min = 2, max = 30)
     String name;
 }

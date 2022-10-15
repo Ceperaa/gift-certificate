@@ -10,15 +10,6 @@ public class  EntityNotFoundException extends RuntimeException {
         this.id = id;
     }
 
-    public EntityNotFoundException(String message, long id) {
-        super(message);
-        this.id = id;
-    }
-
-    public EntityNotFoundException(Class<?> object) {
-        super(object.getName().concat(message));
-    }
-
     public long getId() {
         return id;
     }

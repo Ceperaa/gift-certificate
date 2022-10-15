@@ -29,11 +29,11 @@ class OrderServiceImplTest {
 
     @Mock
     private OrderMapper mapper;
-
     private final OrderService orderService;
 
     @Mock
     private EntityService<GiftCertificate> giftCertificateService;
+
     @Mock
     private EntityService<User> userService;
 

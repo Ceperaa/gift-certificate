@@ -7,8 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.TagMapper;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
+import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagPutDto;
+import ru.clevertec.ecl.model.dto.TagUpdateDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 import ru.clevertec.ecl.services.TagCreateCertificate;
@@ -45,7 +46,7 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
     }
 
     @Transactional
-    public TagDto update(TagPutDto tagForCreateDto, Long id) {
+    public TagDto update(TagUpdateDto tagForCreateDto, Long id) {
         Tag giftCertificate = mapper.toPutEntity(id, findTagById(id), tagForCreateDto);
         return mapper.toDto(tagRepository.save(giftCertificate));
     }
@@ -54,7 +55,7 @@ public class TagServiceImpl implements TagService, TagCreateCertificate {
         return mapper.toDtoList(tagRepository.findAll(page).toList());
     }
 
-    public TagDto saveTagDto(TagPutDto tagDto) {
+    public TagDto saveTagDto(TagCreateDto tagDto) {
         return mapper.toDto(saveTag(mapper.toEntity(tagDto)));
     }
 

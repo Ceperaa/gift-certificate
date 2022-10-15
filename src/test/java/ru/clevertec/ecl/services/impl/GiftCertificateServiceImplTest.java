@@ -8,8 +8,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
+import ru.clevertec.ecl.model.dto.GiftCertificateCreateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
@@ -25,14 +26,17 @@ import static org.mockito.Mockito.verify;
 class GiftCertificateServiceImplTest {
 
     private final GiftCertificateServiceImpl service;
+
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
+
     @Mock
     private TagServiceImpl tagService;
 
     private GiftCertificate giftCertificate;
-    private GiftCertificatePutDto giftCertificateForCreateDto;
+    private GiftCertificateUpdateDto giftCertificateForCreateDto;
     private GiftCertificateDto giftCertificateDto;
+    private GiftCertificateCreateDto giftCertificateCreateDto;
     @Mock
     private GiftCertificateMapper mapper;
 
@@ -41,8 +45,7 @@ class GiftCertificateServiceImplTest {
         this.service = new GiftCertificateServiceImpl(
                 giftCertificateRepository,
                 mapper,
-                tagService
-        );
+                tagService);
     }
 
     @BeforeEach
@@ -50,6 +53,7 @@ class GiftCertificateServiceImplTest {
         giftCertificate = ObjectSupplier.getGiftCertificate();
         giftCertificateForCreateDto = ObjectSupplier.getGiftCertificatePutDto();
         giftCertificateDto = ObjectSupplier.getGiftCertificateDto();
+        giftCertificateCreateDto = ObjectSupplier.getGiftCertificateCreateDto();
     }
 
     @Test
@@ -93,11 +97,11 @@ class GiftCertificateServiceImplTest {
     @Test
     void givenGiftCertificateForSaveDto_whenCreateGiftCertificate_thenGiftCertificateDto() {
         giftCertificateForCreateDto.setTagNames(List.of("tag"));
-        given(mapper.toEntity(giftCertificateForCreateDto, giftCertificate.getTag())).willReturn(giftCertificate);
+        given(mapper.toEntity(giftCertificateCreateDto, giftCertificate.getTag())).willReturn(giftCertificate);
         given(mapper.toDto(giftCertificate)).willReturn(giftCertificateDto);
         given(tagService.createTagIfNotExists(List.of("tag"))).willReturn(giftCertificate.getTag());
         given(giftCertificateRepository.save(giftCertificate)).willReturn(giftCertificate);
-        GiftCertificateDto giftCertificateDtoResult = service.createGiftCertificateDto(giftCertificateForCreateDto);
+        GiftCertificateDto giftCertificateDtoResult = service.createGiftCertificateDto(giftCertificateCreateDto);
         assertEquals(giftCertificateDtoResult, giftCertificateDto);
     }
 

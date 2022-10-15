@@ -20,6 +20,7 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private UserMapper mapper;
 

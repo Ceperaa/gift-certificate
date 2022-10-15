@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.exception.EntityNotFoundException;
 import ru.clevertec.ecl.mapper.GiftCertificateMapper;
 import ru.clevertec.ecl.model.dto.CertificatePriceDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateCreateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
 import ru.clevertec.ecl.repository.CustomerSpecifications;
 import ru.clevertec.ecl.repository.GiftCertificateRepository;
@@ -50,7 +51,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
     }
 
     @Transactional
-    public GiftCertificateDto update(GiftCertificatePutDto giftCertificateDto, Long id) {
+    public GiftCertificateDto update(GiftCertificateUpdateDto giftCertificateDto, Long id) {
         GiftCertificate giftCertificateById = findById(id);
         giftCertificateById.getTag().addAll(tagService.saveTagIfNotExists(giftCertificateDto.getTagNames()));
         GiftCertificate giftCertificate = mapper.toEntityPut(id, giftCertificateDto, giftCertificateById);
@@ -63,7 +64,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
     }
 
     @Transactional
-    public GiftCertificateDto createGiftCertificateDto(GiftCertificatePutDto giftCertificateDto) {
+    public GiftCertificateDto createGiftCertificateDto(GiftCertificateCreateDto giftCertificateDto) {
         return mapper.toDto(save(mapper.toEntity(
                 giftCertificateDto,
                 tagService.createTagIfNotExists(giftCertificateDto.getTagNames())))

@@ -26,10 +26,22 @@ public class ObjectSupplier {
                 .build();
     }
 
-    public static GiftCertificatePutDto getGiftCertificatePutDto() {
+    public static GiftCertificateUpdateDto getGiftCertificatePutDto() {
         ArrayList<String> stringName = new ArrayList<>();
         stringName.add("tag");
-        return GiftCertificatePutDto.builder()
+        return GiftCertificateUpdateDto.builder()
+                .name("name")
+                .price(BigDecimal.valueOf(10.10))
+                .description("description")
+                .tagNames(stringName)
+                .duration(1)
+                .build();
+    }
+
+    public static GiftCertificateCreateDto getGiftCertificateCreateDto() {
+        ArrayList<String> stringName = new ArrayList<>();
+        stringName.add("tag");
+        return GiftCertificateCreateDto.builder()
                 .name("name")
                 .price(BigDecimal.valueOf(10.10))
                 .description("description")
@@ -49,7 +61,6 @@ public class ObjectSupplier {
     }
 
     public static Tag getTag() {
-
         return Tag.builder()
                 .id(1L)
                 .name("tag")
@@ -62,13 +73,17 @@ public class ObjectSupplier {
                 .name("tag").build();
     }
 
-    public static TagPutDto getTagPutDto() {
-        return TagPutDto.builder()
+    public static TagUpdateDto getTagPutDto() {
+        return TagUpdateDto.builder()
+                .name("tag").build();
+    }
+
+    public static TagCreateDto getTagCreateDto() {
+        return TagCreateDto.builder()
                 .name("tag").build();
     }
 
     public static User getUser() {
-
         return User.builder()
                 .id(1L)
                 .name("name")

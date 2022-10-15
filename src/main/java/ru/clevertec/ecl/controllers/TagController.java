@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagPutDto;
+import ru.clevertec.ecl.model.dto.TagUpdateDto;
 import ru.clevertec.ecl.services.TagService;
 
 import javax.validation.Valid;
@@ -23,13 +24,13 @@ public class TagController {
     private final TagService tagService;
 
     @PostMapping
-    public ResponseEntity<TagDto> add(@RequestBody @Valid TagPutDto tagDto) {
+    public ResponseEntity<TagDto> add(@RequestBody @Valid TagCreateDto tagDto) {
         return new ResponseEntity<>(tagService.saveTagDto(tagDto),
                 HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TagDto> update(@RequestBody @Valid TagPutDto tagPutDto,
+    public ResponseEntity<TagDto> update(@RequestBody @Valid TagUpdateDto tagPutDto,
                                          @PathVariable @Positive Long id) {
         return new ResponseEntity<>(tagService.update(tagPutDto, id),
                 HttpStatus.CREATED);

@@ -12,25 +12,29 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GiftCertificatePutDto {
+public class GiftCertificateCreateDto {
 
+    @NotBlank
     @NotEmpty
     @Size(min = 2, max = 30)
     String name;
 
-    @NotEmpty
+    @NotBlank
+    @NotEmpty()
     @Size(min = 2, max = 100)
     String description;
 
     @Positive
     @DecimalMin("00.01")
     @DecimalMax("100.00")
+    @NotNull
     BigDecimal price;
 
     @Min(1)
     @Max(30)
+    @NotNull
     Integer duration;
 
     @Size(max = 30)
-    List<String> tagNames;
+    List<@Size(min = 2, max = 30) @NotBlank String> tagNames;
 }

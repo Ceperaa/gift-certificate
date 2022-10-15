@@ -90,14 +90,14 @@ public class ControllerAdvice {
     private String getCode(Exception e, HttpStatus status) {
         return String.valueOf(status.value()).concat(map.get(e.getClass()));
     }
-}
 
-@Data
-@AllArgsConstructor
-@Builder
-class ExceptionObject {
+    @Data
+    @AllArgsConstructor
+    @Builder
+    private static class ExceptionObject {
 
-    private String code;
-    private String status;
-    private String message;
+        private String code;
+        private String status;
+        private String message;
+    }
 }

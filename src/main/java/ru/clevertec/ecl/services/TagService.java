@@ -1,8 +1,9 @@
 package ru.clevertec.ecl.services;
 
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagPutDto;
+import ru.clevertec.ecl.model.dto.TagUpdateDto;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface TagService {
 
     void delete(Long id);
 
-    TagDto update(TagPutDto tagForCreateDto, Long id);
+    TagDto update(TagUpdateDto tagForCreateDto, Long id);
 
     List<TagDto> findAll(Pageable page);
 
-    TagDto saveTagDto(TagPutDto tagForCreateDto);
+    TagDto saveTagDto(TagCreateDto tagForCreateDto);
 }

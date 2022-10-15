@@ -7,8 +7,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.mapper.TagMapperImpl;
+import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagPutDto;
+import ru.clevertec.ecl.model.dto.TagUpdateDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
 
@@ -22,13 +23,16 @@ import static org.mockito.Mockito.verify;
 class TagServiceImplTest {
 
     private final TagServiceImpl tagService;
+
     @Mock
     private TagRepository tagRepository;
+
     @Mock
     private TagMapperImpl mapper;
     private Tag tag;
     private TagDto tagDto;
-    private TagPutDto tagForCreateDto;
+    private TagUpdateDto tagForCreateDto;
+    private TagCreateDto tagCreateDto;
 
     TagServiceImplTest() {
         MockitoAnnotations.openMocks(this);
@@ -40,6 +44,7 @@ class TagServiceImplTest {
         tag = ObjectSupplier.getTag();
         tagDto = ObjectSupplier.getTagDto();
         tagForCreateDto = ObjectSupplier.getTagPutDto();
+        tagCreateDto = ObjectSupplier.getTagCreateDto();
     }
 
     @Test
@@ -82,8 +87,8 @@ class TagServiceImplTest {
     void givenTagDto_whenSaveTagDto() {
         given(tagRepository.save(tag)).willReturn(tag);
         given(mapper.toDto(tag)).willReturn(tagDto);
-        given(mapper.toEntity(tagForCreateDto)).willReturn(tag);
-        TagDto tagDtoResult = tagService.saveTagDto(tagForCreateDto);
+        given(mapper.toEntity(tagCreateDto)).willReturn(tag);
+        TagDto tagDtoResult = tagService.saveTagDto(tagCreateDto);
         assertEquals(tagDtoResult, tagDto);
     }
 }
