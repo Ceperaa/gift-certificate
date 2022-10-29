@@ -19,6 +19,7 @@ repositories {
 
 ext.versions = [
         'mapStruct': '1.5.2.Final',
+        'gson'     : '2.9.0',
 ]
 
 dependencies {
@@ -33,6 +34,7 @@ dependencies {
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
     implementation 'org.liquibase:liquibase-core'
+    implementation "com.google.code.gson:gson:${versions.gson}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
