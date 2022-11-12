@@ -14,6 +14,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GiftCertificateCreateDto {
 
+    Long id;
+
     @NotBlank
     @NotEmpty
     @Size(min = 2, max = 30)

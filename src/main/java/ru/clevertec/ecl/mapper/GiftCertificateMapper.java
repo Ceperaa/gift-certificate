@@ -27,10 +27,15 @@ public interface GiftCertificateMapper {
                                 @MappingTarget GiftCertificate giftCertificate
     );
 
+    GiftCertificate toEntity(GiftCertificateDto giftCertificateDto);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     GiftCertificate toEntity(CertificatePriceDto giftCertificateDto, @MappingTarget GiftCertificate certificate);
 
     GiftCertificateDto toDto(GiftCertificate giftCertificate);
+
+    @Mapping(target = "tagNames", ignore = true)
+    GiftCertificateCreateDto toDto(GiftCertificateDto giftCertificateDto);
 
     List<GiftCertificateDto> toDtoList(List<GiftCertificate> giftCertificateList);
 

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
 import ru.clevertec.ecl.model.dto.TagUpdateDto;
+import ru.clevertec.ecl.model.entity.Tag;
 
 import java.util.List;
 
@@ -18,4 +19,7 @@ public interface TagService {
     List<TagDto> findAll(Pageable page);
 
     TagDto saveTagDto(TagCreateDto tagForCreateDto);
+
+    Tag saveRecovery(Tag user);
+
 }

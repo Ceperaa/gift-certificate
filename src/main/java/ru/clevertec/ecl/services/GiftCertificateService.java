@@ -28,4 +28,6 @@ public interface GiftCertificateService {
      GiftCertificateDto createGiftCertificateDto(GiftCertificateCreateDto giftCertificate);
 
      List<GiftCertificateDto> findByTagName(String tagName, Pageable pageRequest);
+
+     GiftCertificateDto saveRecovery(GiftCertificateDto giftCertificate);
 }

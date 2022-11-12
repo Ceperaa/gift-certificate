@@ -3,16 +3,14 @@ package ru.clevertec.ecl.model.dto;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderInformationDto {
+public class OrderCreateDto {
 
-    BigDecimal price;
-    LocalDateTime createDate;
+    Long id;
+    Long userId;
+    Long giftCertificateId;
 }
