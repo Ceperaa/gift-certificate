@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public.gift_certificate
 
 CREATE TABLE IF NOT EXISTS public.tag
 (
-    id   BIGSERIAL PRIMARY KEY,
+    id   bigserial PRIMARY KEY,
     name varchar(50) NOT NULL
 );
 
@@ -43,7 +43,7 @@ create table IF NOT EXISTS public.users
 
 create table IF NOT EXISTS public.orders
 (
-    id                  bigserial not null
+    id                  bigint    not null
         constraint order_pk
             primary key,
     create_date         timestamp not null,
@@ -58,4 +58,19 @@ create table IF NOT EXISTS public.orders
         REFERENCES public.users (id)
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS public.order_commit_log
+(
+    id       bigserial PRIMARY KEY,
+    sequence bigint,
+    method   varchar(10) not null
+);
+
+CREATE TABLE IF NOT EXISTS public.commit_log
+(
+    id       bigserial PRIMARY KEY,
+    sequence bigint,
+    method   varchar(30) not null,
+    entity_name   varchar(30) not null
 );

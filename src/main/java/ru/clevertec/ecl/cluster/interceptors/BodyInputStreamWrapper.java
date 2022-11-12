@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.interceptors;
+package ru.clevertec.ecl.cluster.interceptors;
 
 import lombok.SneakyThrows;
 
@@ -27,6 +27,10 @@ public class BodyInputStreamWrapper extends HttpServletRequestWrapper {
             stream();
         }
         return new ServletInputCashedStream(new ByteArrayInputStream(line.toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+    public void setLine(Object line) {
+        this.line = line;
     }
 
     @SneakyThrows

@@ -1,3 +1,4 @@
 spring:
   liquibase:
     change-log: classpath:change/changelog-master.yaml
+#    , classpath:change/sequense.xml

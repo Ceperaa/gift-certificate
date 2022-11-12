@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.mapper.OrderMapper;
+import ru.clevertec.ecl.model.dto.OrderCreateDto;
 import ru.clevertec.ecl.model.dto.OrderDto;
 import ru.clevertec.ecl.model.dto.OrderInformationDto;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
@@ -63,7 +64,7 @@ class OrderServiceImplTest {
         given(giftCertificateService.findById(1L)).willReturn(giftCertificate);
         given(userService.findById(1L)).willReturn(users);
         given(repository.save(ArgumentMatchers.any())).willReturn(orders);
-        OrderDto order = orderService.createOrder(1L, 1L);
+        OrderDto order = orderService.createOrder(new OrderCreateDto());
         assertEquals(order, orderDto);
     }
 

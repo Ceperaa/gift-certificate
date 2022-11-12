@@ -6,11 +6,13 @@ networks:
 
 services:
   ##1
-  springboot-app8081:
+  springbootApp81:
     image: node-1
     build: .
     environment:
       PORT: 8081
+      server_port: 8081
+      spring_liquibase_parameters_startValue: 1
       SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql0:5432/Tag
     ports:
       - 8081:8081
@@ -30,14 +32,16 @@ services:
     networks:
       - app-network
   ##2
-  springboot-app8082:
+  springbootApp85:
     image: node-2
     build: .
     environment:
-      PORT: 8082
+      PORT: 8085
+      server_port: 8085
+      spring_liquibase_parameters_startValue: 2
       SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql1:5432/Tag1
     ports:
-      - 8082:8081
+      - 8085:8085
     depends_on:
       - dbpostgresql1
     networks:
@@ -54,14 +58,16 @@ services:
     networks:
       - app-network
   ##3
-  springboot-app8083:
+  springbootApp86:
     image: node-3
     build: .
     environment:
-      PORT: 8083
+      PORT: 8086
+      server_port: 8086
+      spring_liquibase_parameters_startValue: 3
       SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql2:5432/Tag2
     ports:
-      - 8083:8081
+      - 8086:8086
     depends_on:
       - dbpostgresql2
     networks:
