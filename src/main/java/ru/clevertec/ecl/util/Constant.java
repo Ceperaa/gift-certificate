@@ -14,15 +14,15 @@ public class Constant {
     public final static String ORDER_COMMIT_LOG = "/v1/order-commit-logs";
     public final static String COMMIT_LOG = "/v1/commit-logs";
     public final static String RECOVERY = "/recovery";
-    public final static String USER = "/v1/users";
-    public final static String TAG = "/v1/tags";
-    public final static String GIFT_CERTIFICATE = "/v1/gift-certificates";
+    public final static String CHECK_NODE = "/api/check";
 
     public static final String REGEX_ENTITIES = "/v1/orders|/v1/tags|/v1/users|/v1/gift-certificates";
     public static final String REGEX_DIGITS = "/(\\d+)";
     public static final String REGEX_HOST_PORT = "[a-zA-Z\\d]+:\\d{4}";
+
     public final static String REPEAT = "entity";
     public static final String ID = "id";
+    public static final Integer POOL_SIZE = 20;
 
     public static final String GIFT_CERTIFICATE_SEQ = "gift_certificate_id_seq";
     public static final String USER_SEQ = "users_id_seq";

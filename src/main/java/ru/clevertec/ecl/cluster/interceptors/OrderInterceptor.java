@@ -13,6 +13,8 @@ import ru.clevertec.ecl.exception.NodeNotActiveException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,9 +57,9 @@ public class OrderInterceptor extends AbstractInterceptor implements HandlerInte
         activeNode.get(nodeData.idGroup)
                 .stream()
                 .filter(hostPort -> !hostPort.equals(super.localHostPort))
-                .forEach(hostPort -> super.response(response, super.saveInNode(request, hostPort,ORDER_COMMIT_LOG)));
+                .forEach(hostPort -> super.response(response, super.saveInNode(request, hostPort, ORDER_COMMIT_LOG)));
         return (activeNode.get(nodeData.idGroup).contains(super.localHostPort)) && super.saveLocal(request
-                ,ORDER_COMMIT_LOG);
+                , ORDER_COMMIT_LOG);
     }
 
     private boolean doDelete(HttpServletRequest request, Map<Long, List<String>> stringListMap) {
@@ -65,7 +67,9 @@ public class OrderInterceptor extends AbstractInterceptor implements HandlerInte
         shard
                 .stream()
                 .filter(hostPort -> !hostPort.equals(super.localHostPort))
-                .forEach(hostPort -> restTemplate.delete(super.replacePort(request, hostPort)));
+                .forEach(hostPort ->
+                        CompletableFuture.runAsync(() -> restTemplate.delete(super.replacePort(request, hostPort),
+                                Executors.newFixedThreadPool(POOL_SIZE))));
         return (shard.contains(super.localHostPort));
     }
 

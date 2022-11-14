@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 import static ru.clevertec.ecl.util.Constant.*;
 
@@ -47,7 +48,7 @@ public class EntitiesInterceptor extends AbstractInterceptor implements HandlerI
                 doPatch(request, activeNode);
                 return false;
             default:
-               return doPost(request, activeNode);
+                return doPost(request, activeNode);
         }
     }
 
@@ -56,17 +57,18 @@ public class EntitiesInterceptor extends AbstractInterceptor implements HandlerI
                 .stream()
                 .filter(hostPort -> !hostPort.equals(super.localHostPort))
                 .forEach(hostPort -> super.saveInNode(request, hostPort, COMMIT_LOG)));
-       return super.saveLocal(request, COMMIT_LOG);
+        return super.saveLocal(request, COMMIT_LOG);
     }
 
     private void doPatch(HttpServletRequest request, Map<Long, List<String>> activeNones) {
+
         Object body = super.bodyRead(request);
         log.debug("entity update. body - " + body);
         activeNones.forEach((key, value) -> value
                 .stream()
                 .filter(hostPort -> !hostPort.equals(super.localHostPort))
                 .peek(hostPort -> super.saveCommitLog(request, hostPort, super.getEntityName(hostPort), COMMIT_LOG))
-                .forEach(hostPort -> CompletableFuture.runAsync(() ->
+                .forEach(hostPort -> super.supplyAsync(
                         restTemplate.patchForObject(super.replacePort(request, hostPort), body, Object.class))));
     }
 
@@ -77,6 +79,7 @@ public class EntitiesInterceptor extends AbstractInterceptor implements HandlerI
                         .peek(hostPort -> super.saveCommitLog(request, hostPort, super.getEntityName(hostPort),
                                 COMMIT_LOG))
                         .forEach(hostPort -> CompletableFuture.runAsync(() ->
-                                restTemplate.getForObject(super.replacePort(request, hostPort), Object.class))));
+                                        restTemplate.getForObject(super.replacePort(request, hostPort), Object.class),
+                                Executors.newFixedThreadPool(POOL_SIZE))));
     }
 }

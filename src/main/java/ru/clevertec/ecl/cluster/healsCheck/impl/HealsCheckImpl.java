@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.clevertec.ecl.util.Constant.CHECK_NODE;
+import static ru.clevertec.ecl.util.Constant.HTTP_URL;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -65,8 +68,8 @@ public class HealsCheckImpl implements HealsCheck {
     }
 
     protected String buildUrl(String hostHort) {
-        String replace = "http://".concat(hostHort).concat("/api/check");
-        log.debug("replacePort. replace port = " + replace);
-        return replace;
+       String url = String.format(HTTP_URL,hostHort,CHECK_NODE,"");
+        log.debug("buildUrl. replace port = " + url);
+        return url;
     }
 }

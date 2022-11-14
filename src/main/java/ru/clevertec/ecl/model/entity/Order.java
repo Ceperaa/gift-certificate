@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Immutable
 @Entity
 @Table(name = "orders")
 public class Order implements Persistable<Long> {

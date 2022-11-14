@@ -16,7 +16,7 @@ public class SchedulerWorker {
     private final OrderRecovery orderRecovery;
 
 
-    @Scheduled(initialDelay = 10000L, fixedDelay = 5000000L)
+    @Scheduled(initialDelay = 40000L, fixedDelay = 5000000L)
     @SneakyThrows
     public void doWork() {
         healsCheck.checkShards();

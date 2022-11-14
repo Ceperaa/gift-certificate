@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,11 +90,12 @@ public abstract class AbstractInterceptor {
                 .getForObject(String.format(HTTP_URL, hostPort, entityName, SEQUENCE_NEXTVAL), Long.class);
     }
 
+    @SneakyThrows
     protected Object saveInNode(HttpServletRequest request, String hostPort, String commitLogName) {
         Map body = (Map) bodyRead(request);
         String url = replacePort(request, hostPort);
-        body.put("id", saveCommitLog(request, hostPort, getEntityName(url),commitLogName));
-        Object object = restTemplate.postForObject(url, body, Object.class);
+        body.put("id", saveCommitLog(request, hostPort, getEntityName(url), commitLogName));
+        Object object = supplyAsync(restTemplate.postForObject(url, body, Object.class));
         log.debug("order save. Order = " + object);
         return object;
     }
@@ -100,7 +103,7 @@ public abstract class AbstractInterceptor {
     protected boolean saveLocal(HttpServletRequest request, String commitLogName) {
         Map body = (Map) bodyRead(request);
         BodyInputStreamWrapper wrapper = (BodyInputStreamWrapper) request;
-        body.put(ID, saveCommitLog(request, localHostPort, getEntityName(replacePort(request, localHostPort)),commitLogName));
+        body.put(ID, saveCommitLog(request, localHostPort, getEntityName(replacePort(request, localHostPort)), commitLogName));
         wrapper.setLine(new Gson().toJson(body));
         return true;
     }
@@ -108,11 +111,14 @@ public abstract class AbstractInterceptor {
     protected Long saveCommitLog(HttpServletRequest request, String hostPort, String entityName, String commitLogName) {
         log.debug("saveCommitLog. hostPort = " + hostPort);
         Long lastSequence = findNextvalSequence(hostPort, entityName);
-        Object o = restTemplate.postForObject(String.format(HTTP_URL, hostPort, commitLogName, ""),
-                buildCommitLog(entityName, request, lastSequence), Object.class);
+        Object o = supplyAsync(restTemplate.postForObject(String.format(HTTP_URL, hostPort, commitLogName, ""),
+                buildCommitLog(entityName, request, lastSequence), Object.class));
         log.debug("save commit log = " + o);
         return lastSequence;
     }
 
-
+    @SneakyThrows
+    protected Object supplyAsync(Object object) {
+        return CompletableFuture.supplyAsync(() -> object, Executors.newFixedThreadPool(POOL_SIZE)).get();
+    }
 }
