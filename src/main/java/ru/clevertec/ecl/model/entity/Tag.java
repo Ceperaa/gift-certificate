@@ -1,19 +1,27 @@
 package ru.clevertec.ecl.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
+@EqualsAndHashCode(of = {"name"})
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tag {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private List<GiftCertificate> giftCertificateList;
+
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "tag",fetch = FetchType.LAZY)
+    private List<GiftCertificate> giftCertificate = new ArrayList<>();
 }

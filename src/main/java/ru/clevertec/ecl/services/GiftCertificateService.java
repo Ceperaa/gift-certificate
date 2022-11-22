@@ -1,10 +1,10 @@
 package ru.clevertec.ecl.services;
 
+import org.springframework.data.domain.PageRequest;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.util.Page;
+import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
 
 import java.util.List;
-import java.util.Map;
 
 public interface GiftCertificateService {
 
@@ -12,13 +12,13 @@ public interface GiftCertificateService {
 
      void delete(Long id);
 
-     GiftCertificateDto update(Map<String,Object> giftCertificateMap,Long id);
+     GiftCertificateDto update(GiftCertificatePutDto giftCertificateDto, Long id);
 
-     List<GiftCertificateDto> findAll(Page page);
+     List<GiftCertificateDto> findAll(PageRequest page);
 
-     GiftCertificateDto create(GiftCertificateDto giftCertificate);
+     List<GiftCertificateDto> findByCertificateNameAndDescription(String name, String description, PageRequest page);
 
-     List<GiftCertificateDto> findByTag(String tagName);
+     GiftCertificateDto create(GiftCertificatePutDto giftCertificate);
 
-     List<GiftCertificateDto> findByTagName(String name, String description);
+     List<GiftCertificateDto> findByTagName(String tagName, PageRequest pageRequest);
 }

@@ -1,52 +1,64 @@
 package ru.clevertec.ecl.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.clevertec.ecl.model.dto.TagDto;
+import ru.clevertec.ecl.model.dto.TagForPutDto;
 import ru.clevertec.ecl.services.TagService;
-import ru.clevertec.ecl.util.Page;
+import ru.clevertec.ecl.util.ValidatorHandler;
 
+import javax.validation.Valid;
+import javax.xml.bind.ValidationException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/tags")
+@RequestMapping("api/v1/tags")
 @RequiredArgsConstructor
 public class TagController {
 
     private final TagService tagService;
+    private final ValidatorHandler validatorHandler;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDto add(@RequestBody TagDto tagDto) {
-        return tagService.create(tagDto);
+    public ResponseEntity<TagDto> add(
+            @RequestBody @Valid TagForPutDto tagDto,
+            BindingResult bindingResult
+    ) throws ValidationException {
+        validatorHandler.message(bindingResult);
+        return new ResponseEntity<>(tagService.saveTagDto(tagDto),
+                HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TagDto update(
-            @RequestBody Map<String, Object> batch,
+    @PatchMapping("/{id}")
+    public ResponseEntity<TagDto> update(
+            @RequestBody TagForPutDto tagForCreateDto,
             @PathVariable Long id) {
-        return tagService.update(batch, id);
+        return new ResponseEntity<>(tagService.update(tagForCreateDto, id),
+                HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<TagDto> all(
-            @RequestParam(required = false) int limit,
-            @RequestParam(required = false) int offset
+    public ResponseEntity<List<TagDto>> all(
+            @RequestParam(defaultValue = "20") int limit,
+            @RequestParam(defaultValue = "0") int offset
     ) {
-        return tagService.findAll(Page.of(limit,offset));
+        return new ResponseEntity<>(tagService.findAll(PageRequest.of(limit, offset)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public TagDto findById(@PathVariable long id) {
-        return tagService.findById(id);
+    public ResponseEntity<TagDto> findById(@PathVariable long id) {
+        return new ResponseEntity<>(tagService.findTagDtoById(id),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity delete(@PathVariable Long id) {
         tagService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

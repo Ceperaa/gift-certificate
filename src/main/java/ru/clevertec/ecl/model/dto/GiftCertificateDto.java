@@ -11,6 +11,7 @@ import ru.clevertec.ecl.util.StringLocalDateConvert;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,9 +24,12 @@ public class GiftCertificateDto {
     private String description;
     private BigDecimal price;
     private Integer duration;
+    private List<TagDto> tag;
+
     @JsonSerialize(converter = LocalDateStringConvert.class)
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime createDate;
+
     @JsonSerialize(converter = LocalDateStringConvert.class)
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime lastUpdateDate;

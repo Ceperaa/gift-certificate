@@ -1,14 +1,19 @@
-datasource:
-  url: jdbc:postgresql://localhost:5432/GiftCertificates
-  driver: org.postgresql.Driver
-  username: postgres
-  password: root
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/GiftCertificates
+    driver: org.postgresql.Driver
+    username: postgres
+    password: root
 
-#hibernate:
-#  dialect: org.hibernate.dialect.PostgreSQL10Dialect
-#  show_sql: true
-#  format_sql: true
-#  physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  hibernate:
+    dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    show_sql: true
+    format_sql: true
+    physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
-liquibase:
-  changelog: db-changelog.xml
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  profiles:
+    active: prod
