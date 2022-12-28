@@ -13,66 +13,36 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-//configurations {
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
-//}
-
-//tasks.withType(JavaCompile) {
-//    options.annotationProcessorGeneratedSourcesDirectory = file("src/generated/java")
-//}
-//sourceSets {
-//    generated {
-//        java {
-//            srcDirs = ['src/generated/java']
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
 }
 
 ext.versions = [
-        'gson'     : '2.9.0',
         'mapStruct': '1.5.2.Final',
-        'junit'    : '5.8.2',
-        'mockito'  : '4.7.0',
-        'yaml'      : '2.13.3',
-        'log4j'     : '2.18.0',
-        'slf4j'     : '1.7.36',
 ]
-
-
 
 dependencies {
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
-
     implementation 'org.liquibase:liquibase-core'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
-
-    //implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.yaml}"
-   // implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
-    //  implementation "com.google.code.gson:gson:${versions.gson}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
+    runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+
 }
 
-
-
-configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 }
 
 tasks.named('test') {

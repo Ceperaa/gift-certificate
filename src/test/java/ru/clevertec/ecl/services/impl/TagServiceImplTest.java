@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.services;
+package ru.clevertec.ecl.services.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,13 +6,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import ru.clevertec.ecl.mapper.TagMapper;
+import ru.clevertec.ecl.mapper.TagMapperImpl;
+import ru.clevertec.ecl.model.dto.TagCreateDto;
 import ru.clevertec.ecl.model.dto.TagDto;
-import ru.clevertec.ecl.model.dto.TagForPutDto;
-import ru.clevertec.ecl.model.entity.GiftCertificate;
+import ru.clevertec.ecl.model.dto.TagUpdateDto;
 import ru.clevertec.ecl.model.entity.Tag;
 import ru.clevertec.ecl.repository.TagRepository;
-import ru.clevertec.ecl.services.impl.TagServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +23,16 @@ import static org.mockito.Mockito.verify;
 class TagServiceImplTest {
 
     private final TagServiceImpl tagService;
+
     @Mock
     private TagRepository tagRepository;
+
     @Mock
-    private TagMapper mapper;
+    private TagMapperImpl mapper;
     private Tag tag;
     private TagDto tagDto;
-    private TagForPutDto tagForCreateDto;
+    private TagUpdateDto tagForCreateDto;
+    private TagCreateDto tagCreateDto;
 
     TagServiceImplTest() {
         MockitoAnnotations.openMocks(this);
@@ -39,15 +41,10 @@ class TagServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        tag = Tag.builder()
-                .id(1L)
-                .name("tag")
-                .giftCertificate(List.of(new GiftCertificate())).build();
-        tagDto = TagDto.builder()
-                .id(1L)
-                .name("tag").build();
-        tagForCreateDto = TagForPutDto.builder()
-                .name("tag").build();
+        tag = ObjectSupplier.getTag();
+        tagDto = ObjectSupplier.getTagDto();
+        tagForCreateDto = ObjectSupplier.getTagPutDto();
+        tagCreateDto = ObjectSupplier.getTagCreateDto();
     }
 
     @Test
@@ -68,11 +65,11 @@ class TagServiceImplTest {
     @Test
     void givenTagDto_whenUpdate() {
         given(tagRepository.findById(1L)).willReturn(Optional.of(tag));
-        given(tagRepository.save(tag)).willReturn(tag);
         given(mapper.toDto(tag)).willReturn(tagDto);
-        given(mapper.toPutEntity(1L,tagForCreateDto)).willReturn(tag);
-        TagDto tagDtoResult = tagService.update(tagForCreateDto, 1L);
-        assertEquals(tagDtoResult, tagDto);
+        given(mapper.toPutEntity(1L, tag, tagForCreateDto)).willReturn(tag);
+        given(tagRepository.save(tag)).willReturn(tag);
+        TagDto update = tagService.update(tagForCreateDto, 1L);
+        assertEquals(update, tagDto);
     }
 
     @Test
@@ -90,8 +87,8 @@ class TagServiceImplTest {
     void givenTagDto_whenSaveTagDto() {
         given(tagRepository.save(tag)).willReturn(tag);
         given(mapper.toDto(tag)).willReturn(tagDto);
-        given(mapper.toEntity(tagForCreateDto)).willReturn(tag);
-        TagDto tagDtoResult = tagService.saveTagDto(tagForCreateDto);
+        given(mapper.toEntity(tagCreateDto)).willReturn(tag);
+        TagDto tagDtoResult = tagService.saveTagDto(tagCreateDto);
         assertEquals(tagDtoResult, tagDto);
     }
 }

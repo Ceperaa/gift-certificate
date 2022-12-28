@@ -1,3 +1,3 @@
 spring:
   liquibase:
-    change-log: change/db-changelog-dev.xml
+    change-log: classpath:change/changelog-master-dev.yaml

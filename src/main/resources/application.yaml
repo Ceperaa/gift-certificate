@@ -1,15 +1,17 @@
 spring:
+
   datasource:
     url: jdbc:postgresql://localhost:5432/GiftCertificates
-    driver: org.postgresql.Driver
+    driver_class_name: org.postgresql.Driver
     username: postgres
     password: root
 
-  hibernate:
-    dialect: org.hibernate.dialect.PostgreSQL10Dialect
-    show_sql: true
-    format_sql: true
-    physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        show_sql: false
+        format_sql: true
 
   mvc:
     pathmatch:
@@ -17,3 +19,7 @@ spring:
 
   profiles:
     active: prod
+
+server:
+  servlet:
+    context-path: /api/

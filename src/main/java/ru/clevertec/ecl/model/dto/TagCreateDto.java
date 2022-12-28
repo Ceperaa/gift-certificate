@@ -1,11 +1,9 @@
 package ru.clevertec.ecl.model.dto;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -13,9 +11,11 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TagForPutDto {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class TagCreateDto {
 
+    @NotBlank
     @NotEmpty
     @Size(min = 2, max = 30)
-    private String name;
+    String name;
 }

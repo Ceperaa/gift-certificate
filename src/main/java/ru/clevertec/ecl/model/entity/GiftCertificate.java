@@ -38,13 +38,22 @@ public class GiftCertificate {
     @JsonDeserialize(converter = StringLocalDateConvert.class)
     private LocalDateTime lastUpdateDate;
 
+    @OneToMany
+    @JoinColumn(name = "gift_certificate_id")
+    private List<Order> orders;
+
     @ToString.Exclude
     @ManyToMany
     private List<Tag> tag = new ArrayList<>();
 
-
     @PreUpdate
     public void setLastUpdateDate() {
         this.lastUpdateDate = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void setCreateDate() {
+        this.lastUpdateDate = LocalDateTime.now();
+        this.createDate = LocalDateTime.now();
     }
 }

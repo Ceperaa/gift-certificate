@@ -16,15 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 class GiftCertificateRepositoryTest {
 
-    @Autowired
-    private GiftCertificateRepository giftCertificateRepository;
+    private final GiftCertificateRepository giftCertificateRepository;
 
+    @Autowired
+    GiftCertificateRepositoryTest(GiftCertificateRepository giftCertificateRepository) {
+        this.giftCertificateRepository = giftCertificateRepository;
+    }
 
     @Test
     @Transactional
     void findByNameWithPagination() {
         List<GiftCertificate> byNameWithPagination = giftCertificateRepository
-                .findByName("name", PageRequest.of(0, 20));
-        assertEquals(byNameWithPagination.size(), 1);
+                .findByName("", PageRequest.of(0, 20));
+        assertEquals(byNameWithPagination.size(), 4);
     }
 }

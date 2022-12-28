@@ -9,9 +9,9 @@ public interface TagCreateCertificate {
 
     Tag saveTag(Tag tag);
 
-    List<Tag> saveTagIfNotExists(List<String> dtoTag);
+    List<Tag> createTagIfNotExists(List<String> tagNameList);
 
-    List<Tag> mapToTagList(List<String> tagNameList);
+    List<Tag> saveTagIfNotExists(List<String> tagNameList);
 
     Optional<Tag> findTagByName(String name);
 }

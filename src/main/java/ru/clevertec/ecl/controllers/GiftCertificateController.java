@@ -1,92 +1,90 @@
 package ru.clevertec.ecl.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.clevertec.ecl.model.dto.CertificatePriceDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateCreateDto;
 import ru.clevertec.ecl.model.dto.GiftCertificateDto;
-import ru.clevertec.ecl.model.dto.GiftCertificatePutDto;
+import ru.clevertec.ecl.model.dto.GiftCertificateUpdateDto;
 import ru.clevertec.ecl.services.GiftCertificateService;
-import ru.clevertec.ecl.util.Sorting;
-import ru.clevertec.ecl.util.ValidatorHandler;
 
 import javax.validation.Valid;
-import javax.xml.bind.ValidationException;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/gift-certificates")
+@RequestMapping("v1/gift-certificates")
 @RequiredArgsConstructor
+@Validated
 public class GiftCertificateController {
 
     private final GiftCertificateService service;
-    private final ValidatorHandler validatorHandler;
 
     @PostMapping
-    public ResponseEntity<GiftCertificateDto> add(
-            @RequestBody @Valid GiftCertificatePutDto giftCertificateDto,
-            BindingResult bindingResult
-    ) throws ValidationException {
-        validatorHandler.message(bindingResult);
-        return new ResponseEntity<>(service.create(giftCertificateDto),
+    public ResponseEntity<GiftCertificateDto> add(@RequestBody @Valid GiftCertificateCreateDto giftCertificateDto) {
+        return new ResponseEntity<>(service.createGiftCertificateDto(giftCertificateDto),
                 HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<GiftCertificateDto> update(@RequestBody GiftCertificatePutDto giftCertificateDto,
-                                                     @PathVariable Long id) {
-        return new ResponseEntity<>(service.update(giftCertificateDto, id), HttpStatus.CREATED);
+    @PutMapping("/{id}")
+    public ResponseEntity<GiftCertificateDto> update(@RequestBody @Valid GiftCertificateUpdateDto giftCertificatePutDto,
+                                                     @PathVariable @Positive Long id) {
+        return new ResponseEntity<>(service.update(giftCertificatePutDto, id),
+                HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/price/{id}")
+    public ResponseEntity<GiftCertificateDto> updatePrice(@RequestBody CertificatePriceDto certificatePriceDto,
+                                                          @PathVariable @Positive Long id) {
+        return new ResponseEntity<>(service.updatePrice(certificatePriceDto, id),
+                HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable @Positive Long id) {
+        service.delete(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<GiftCertificateDto>> all(
-            @RequestParam(defaultValue = "20") Integer limit,
-            @RequestParam(defaultValue = "0") Integer offset
-    ) {
-        return new ResponseEntity<>(service.findAll(PageRequest.of(offset, limit)),
+    public ResponseEntity<List<GiftCertificateDto>> all(Pageable pageRequest) {
+        return new ResponseEntity<>(service.findAll(pageRequest),
                 HttpStatus.OK);
-    }
-
-    @GetMapping("/tag")
-    public ResponseEntity<List<GiftCertificateDto>> findByTag(
-            @RequestParam(required = false) String tagName,
-            @RequestParam(defaultValue = "20") Integer limit,
-            @RequestParam(defaultValue = "0") Integer offset
-    ) {
-        return new ResponseEntity<>(service.findByTagName(tagName,
-                PageRequest.of(
-                        offset,
-                        limit
-                )), HttpStatus.OK);
     }
 
     @GetMapping("/name")
     public ResponseEntity<List<GiftCertificateDto>> findByNameAndDescription(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description,
-            @RequestParam(defaultValue = "20") Integer limit,
-            @RequestParam(defaultValue = "0") Integer offset,
-            @RequestParam(defaultValue = "name") Sorting sorts
-    ) {
-        return new ResponseEntity<>(service.findByCertificateNameAndDescription(name, description,
-                PageRequest.of(
-                        offset,
-                        limit,
-                        Sort.by(Sort.Direction.ASC, sorts.getSort())
-                )), HttpStatus.OK);
+            @RequestParam(required = false) @Size(min = 2, max = 30) String name,
+            @RequestParam(required = false) @Size(min = 2, max = 30) String description,
+            Pageable pageable) {
+        return new ResponseEntity<>(service.findByCertificateNameAndDescription(name, description, pageable),
+                HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<GiftCertificateDto> findById(@PathVariable long id) {
-        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    public ResponseEntity<GiftCertificateDto> findById(@PathVariable @Positive Long id) {
+        return new ResponseEntity<>(service.findGiftCertificateDtoById(id),
+                HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/by-tag")
+    public ResponseEntity<List<GiftCertificateDto>> findByTag(
+            @RequestParam(required = false) @Size(min = 2, max = 30) String tagName,
+            @PageableDefault Pageable pageRequest) {
+        return new ResponseEntity<>(service.findByTagName(tagName, pageRequest),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/by-tags")
+    ResponseEntity<List<GiftCertificateDto>> findGiftCertificateByTags(
+           @RequestParam(required = false) List<@Size(min = 2, max = 30) String> tags, Pageable pageRequest) {
+        return new ResponseEntity<>(service.findGiftCertificateByTags(tags, pageRequest),
+                HttpStatus.OK);
     }
 }
