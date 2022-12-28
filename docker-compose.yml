@@ -1,0 +1,79 @@
+version: "3"
+
+networks:
+  app-network:
+    external: true
+
+services:
+  ##1
+  springboot-app8081:
+    image: node-1
+    build: .
+    environment:
+      PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql0:5432/Tag
+    ports:
+      - 8081:8081
+    depends_on:
+      - dbpostgresql0
+    networks:
+      - app-network
+  dbpostgresql0:
+    container_name: some_postgres1
+    image: postgres:14.0
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: Tag
+    networks:
+      - app-network
+  ##2
+  springboot-app8082:
+    image: node-2
+    build: .
+    environment:
+      PORT: 8082
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql1:5432/Tag1
+    ports:
+      - 8082:8081
+    depends_on:
+      - dbpostgresql1
+    networks:
+      - app-network
+  dbpostgresql1:
+    container_name: some_postgres2
+    image: postgres:14.0
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: Tag1
+    networks:
+      - app-network
+  ##3
+  springboot-app8083:
+    image: node-3
+    build: .
+    environment:
+      PORT: 8083
+      SPRING_DATASOURCE_URL: jdbc:postgresql://dbpostgresql2:5432/Tag2
+    ports:
+      - 8083:8081
+    depends_on:
+      - dbpostgresql2
+    networks:
+      - app-network
+  dbpostgresql2:
+    container_name: some_postgres3
+    image: postgres:14.0
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: Tag2
+    networks:
+      - app-network
