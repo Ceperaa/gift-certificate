@@ -9,12 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import ru.clevertec.ecl.model.entity.GiftCertificate;
-import ru.clevertec.ecl.model.entity.GiftCertificate_;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long>, JpaSpecificationExecutor<GiftCertificate> {
+public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long>,
+        JpaSpecificationExecutor<GiftCertificate>,
+        RepositoryEntity<GiftCertificate> {
 
     @EntityGraph(attributePaths = "tag")
     @Query(" select gc " +
@@ -25,7 +26,7 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
                                      Pageable pageable);
 
     @Override
-    @EntityGraph(attributePaths = GiftCertificate_.TAG)
+    @EntityGraph(attributePaths = "tag")
     Optional<GiftCertificate> findById(Long id);
 
     @Override
@@ -35,5 +36,9 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
     @Override
     @EntityGraph(attributePaths = "tag")
     Page<GiftCertificate> findAll(Example example, Pageable page);
+
+    @Query(value = "SELECT (CASE WHEN is_called THEN last_value ELSE last_value - 1 END )" +
+            " AS nextvalue FROM gift_certificate_id_seq", nativeQuery = true)
+    Long getNextValMySequence();
 
 }

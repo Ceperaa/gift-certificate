@@ -21,6 +21,9 @@ import ru.clevertec.ecl.services.TagCreateCertificate;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+import static ru.clevertec.ecl.util.Constant.GIFT_CERTIFICATE_SEQ;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -38,6 +41,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
     public GiftCertificate findById(Long id) {
         return giftCertificateRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(GiftCertificateDto.class, id));
+    }
+
+    @Override
+    public Long getSequence() {
+        return giftCertificateRepository.getNextValMySequence();
+    }
+
+    @Override
+    public List<GiftCertificate> findByFirstIdAndLastId(Long firstId, Long lastId) {
+        return giftCertificateRepository.findByIdBetween(firstId,lastId);
+    }
+
+    @Override
+    @Transactional
+    public Long nextval() {
+        return giftCertificateRepository.nextval(GIFT_CERTIFICATE_SEQ);
     }
 
     @Transactional
@@ -71,8 +90,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService, Entit
         );
     }
 
-    private GiftCertificate save(GiftCertificate giftCertificateDto) {
-        return giftCertificateRepository.save(giftCertificateDto);
+    @Transactional
+    public GiftCertificate save(GiftCertificate giftCertificate) {
+        return giftCertificateRepository.save(giftCertificate);
+    }
+
+    @Transactional
+    public GiftCertificateDto saveRecovery(GiftCertificateDto giftCertificate) {
+        List<String> collect = giftCertificate.getTag().stream().map(tag -> tag.getName()).collect(toList());
+        GiftCertificateCreateDto giftCertificateCreateDto = mapper.toDto(giftCertificate);
+        giftCertificateCreateDto.setTagNames(collect);
+        giftCertificateRepository.setval(GIFT_CERTIFICATE_SEQ,giftCertificate.getId());
+        return mapper.toDto(save(mapper.toEntity(
+                giftCertificateCreateDto,
+                tagService.createTagIfNotExists(collect)))
+        );
     }
 
     private ExampleMatcher matcherConfig() {

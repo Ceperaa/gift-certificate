@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.interceptors;
+package ru.clevertec.ecl.cluster.interceptors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -22,5 +22,4 @@ public class FilterCachingRequestWrapper extends OncePerRequestFilter {
         HttpServletRequest requestW = new BodyInputStreamWrapper(request);
         filterChain.doFilter(requestW, response);
     }
-
 }

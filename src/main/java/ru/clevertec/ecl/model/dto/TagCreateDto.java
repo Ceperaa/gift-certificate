@@ -14,6 +14,8 @@ import javax.validation.constraints.Size;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TagCreateDto {
 
+    Long id;
+
     @NotBlank
     @NotEmpty
     @Size(min = 2, max = 30)

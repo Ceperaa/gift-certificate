@@ -26,15 +26,18 @@ dependencies {
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapStruct}"
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.7.3'
+    implementation "com.google.code.gson:gson:${versions.gson}"
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     implementation "org.mapstruct:mapstruct:${versions.mapStruct}"
     implementation 'org.liquibase:liquibase-core'
-    implementation "com.google.code.gson:gson:${versions.gson}"
+    implementation 'org.yaml:snakeyaml:1.33'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
@@ -49,4 +52,8 @@ configurations.all {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    exclude '**/*'
 }

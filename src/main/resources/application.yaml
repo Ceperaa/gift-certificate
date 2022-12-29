@@ -1,7 +1,7 @@
 spring:
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/GiftCertificates
+    #        url: jdbc:postgresql://localhost:5432/GiftCertificates
     driver_class_name: org.postgresql.Driver
     username: postgres
     password: root
@@ -24,7 +24,28 @@ server:
   servlet:
     context-path: /api/
 
-ports:
-  8081,
-  8082,
-  8083
+cluster:
+  nodes:
+    - - localhost:8085
+      - localhost:8087
+      - localhost:8089
+
+    - - localhost:8081
+      - localhost:8082
+      - localhost:8083
+
+    - - localhost:8086
+      - localhost:8084
+      - localhost:8088
+
+
+
+#cluster:
+#  nodes:
+#    - - springbootApp81:8085
+#
+#    - - springbootApp85:8081
+#
+#    - - springbootApp86:8086
+
+

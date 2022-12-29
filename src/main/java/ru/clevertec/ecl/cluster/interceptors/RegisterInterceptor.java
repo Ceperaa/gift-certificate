@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.interceptors;
+package ru.clevertec.ecl.cluster.interceptors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class RegisterInterceptor implements WebMvcConfigurer {
                         "/api/error/**",
                         "/v1/orders/sequence/**")
                 .addPathPatterns(
-                        "v1/orders/**");
+                        "/v1/orders/**");
 
         registry.addInterceptor(entitiesInterceptor)
                 .excludePathPatterns(
